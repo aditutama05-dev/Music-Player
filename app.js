@@ -2,13 +2,26 @@ let currentMode = 'chat';
 let chats = JSON.parse(localStorage.getItem('my_ai_chats') || '{}');
 let currentChatId = localStorage.getItem('current_chat_id') || Date.now().toString();
 
+// Konfigurasi Markdown & Code Highlighting
+if (typeof marked !== 'undefined') {
+  marked.setOptions({
+    highlight: function(code, lang) {
+      if (typeof hljs !== 'undefined' && lang && hljs.getLanguage(lang)) {
+        return hljs.highlight(code, { language: lang }).value;
+      }
+      return typeof hljs !== 'undefined' ? hljs.highlightAuto(code).value : code;
+    },
+    breaks: true
+  });
+}
+
 if (!chats[currentChatId]) {
   chats[currentChatId] = { title: 'Chat Baru', messages: [] };
   localStorage.setItem('my_ai_chats', JSON.stringify(chats));
   localStorage.setItem('current_chat_id', currentChatId);
 }
 
-// UI Mode Switcher
+// Mode Switcher
 function setMode(mode) {
   currentMode = mode;
   document.querySelectorAll('.mode-item').forEach(el => el.classList.remove('active'));
@@ -28,7 +41,7 @@ function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('hidden');
 }
 
-// Chat History Management
+// History Management
 function renderHistory() {
   const list = document.getElementById('chat-history');
   list.innerHTML = '';
@@ -74,6 +87,11 @@ function appendMessage(role, content, type = 'text') {
 
   if (type === 'image') {
     msg.innerHTML = `<img src="${content}" alt="Generated Image"/>`;
+  } else if (role === 'ai' && typeof marked !== 'undefined') {
+    msg.innerHTML = marked.parse(content);
+    msg.querySelectorAll('pre code').forEach(el => {
+      if (typeof hljs !== 'undefined') hljs.highlightElement(el);
+    });
   } else {
     msg.innerText = content;
   }
@@ -83,7 +101,7 @@ function appendMessage(role, content, type = 'text') {
   return msg;
 }
 
-// Settings Modal
+// Modal Settings
 function openSettings() {
   const modal = document.getElementById('settings-modal');
   const tokenInput = document.getElementById('gh-token-input');
@@ -134,9 +152,10 @@ async function sendMessage() {
     const aiBubble = appendMessage('ai', 'Mengambil daftar repositori dari GitHub...');
     try {
       const repos = await window.GitHubAgent.listUserRepos();
-      const repoList = repos.map(r => `• ${r.name} (${r.private ? 'Private' : 'Public'}) - ${r.html_url}`).join('\n');
-      const responseText = `Berikut daftar repositori kamu:\n\n${repoList}`;
-      aiBubble.innerText = responseText;
+      const repoList = repos.map(r => `* **[${r.name}](${r.html_url})** - ${r.private ? '🔒 Private' : '🌐 Public'}`).join('\n');
+      const responseText = `### Daftar Repositori GitHub Kamu:\n\n${repoList}`;
+      
+      aiBubble.innerHTML = typeof marked !== 'undefined' ? marked.parse(responseText) : responseText;
       chats[currentChatId].messages.push({ role: 'ai', content: responseText, type: 'text' });
     } catch (err) {
       aiBubble.innerText = `Gagal mengakses GitHub: ${err.message}. Pastikan Token PAT sudah diisi di Pengaturan.`;
@@ -155,7 +174,15 @@ async function sendMessage() {
     const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent(text)}?system=${encodeURIComponent(systemPrompt)}`);
     const result = await response.text();
 
-    aiBubble.innerText = result;
+    if (typeof marked !== 'undefined') {
+      aiBubble.innerHTML = marked.parse(result);
+      aiBubble.querySelectorAll('pre code').forEach(el => {
+        if (typeof hljs !== 'undefined') hljs.highlightElement(el);
+      });
+    } else {
+      aiBubble.innerText = result;
+    }
+
     chats[currentChatId].messages.push({ role: 'ai', content: result, type: 'text' });
   } catch (err) {
     aiBubble.innerText = 'Gagal memuat respon. Periksa koneksi internet Anda.';
@@ -170,3 +197,4 @@ function handleKey(e) {
 
 // Inisialisasi awal
 loadChat(currentChatId);
+      
