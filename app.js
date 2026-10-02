@@ -92,6 +92,9 @@ function appendMessage(role, content, type = 'text') {
     msg.querySelectorAll('pre code').forEach(el => {
       if (typeof hljs !== 'undefined') hljs.highlightElement(el);
     });
+    if (window.attachCodeCopyButtons) {
+      window.attachCodeCopyButtons(msg);
+    }
   } else {
     msg.innerText = content;
   }
@@ -156,6 +159,7 @@ async function sendMessage() {
       const responseText = `### Daftar Repositori GitHub Kamu:\n\n${repoList}`;
       
       aiBubble.innerHTML = typeof marked !== 'undefined' ? marked.parse(responseText) : responseText;
+      if (window.attachCodeCopyButtons) window.attachCodeCopyButtons(aiBubble);
       chats[currentChatId].messages.push({ role: 'ai', content: responseText, type: 'text' });
     } catch (err) {
       aiBubble.innerText = `Gagal mengakses GitHub: ${err.message}. Pastikan Token PAT sudah diisi di Pengaturan.`;
@@ -179,6 +183,9 @@ async function sendMessage() {
       aiBubble.querySelectorAll('pre code').forEach(el => {
         if (typeof hljs !== 'undefined') hljs.highlightElement(el);
       });
+      if (window.attachCodeCopyButtons) {
+        window.attachCodeCopyButtons(aiBubble);
+      }
     } else {
       aiBubble.innerText = result;
     }
@@ -197,4 +204,4 @@ function handleKey(e) {
 
 // Inisialisasi awal
 loadChat(currentChatId);
-      
+    
