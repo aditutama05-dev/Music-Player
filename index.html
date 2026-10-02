@@ -5,65 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Personal AI Codex</title>
   <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
   <meta name="theme-color" content="#1e1f20">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { display: flex; height: 100vh; background: #131314; color: #e3e3e3; overflow: hidden; }
-    
-    /* Sidebar Drawer */
-    #sidebar { width: 280px; background: #1e1f20; display: flex; flex-direction: column; transition: transform 0.25s ease; z-index: 1000; border-right: 1px solid #282a2c; flex-shrink: 0; }
-    #sidebar.hidden { transform: translateX(-100%); position: absolute; height: 100%; }
-    .sidebar-header { padding: 16px; border-bottom: 1px solid #282a2c; }
-    .btn-new { width: 100%; padding: 12px 14px; background: #282a2c; border: 1px solid #3c4043; border-radius: 8px; color: #e3e3e3; font-weight: 600; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 8px; }
-    .btn-new:hover { background: #37393b; }
-    
-    /* Navigation Modes */
-    .nav-modes { padding: 12px 16px; border-bottom: 1px solid #282a2c; display: flex; flex-direction: column; gap: 4px; }
-    .mode-item { padding: 10px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 14px; color: #c4c7c5; }
-    .mode-item.active { background: #004a77; color: #c2e7ff; font-weight: 500; }
-    
-    /* History List */
-    .history-label { padding: 12px 16px 4px; font-size: 12px; font-weight: bold; color: #8e918f; text-transform: uppercase; letter-spacing: 0.5px; }
-    .history-list { flex: 1; overflow-y: auto; padding: 4px 16px 12px; }
-    .history-item { padding: 10px 12px; border-radius: 6px; cursor: pointer; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #c4c7c5; }
-    .history-item:hover { background: #282a2c; color: #fff; }
-    .history-item.active-chat { background: #282a2c; color: #a8c7fa; }
-
-    /* Sidebar Footer Settings */
-    .sidebar-footer { padding: 12px 16px; border-top: 1px solid #282a2c; }
-    .btn-settings { width: 100%; padding: 10px; background: transparent; border: 1px solid #3c4043; border-radius: 8px; color: #c4c7c5; cursor: pointer; font-size: 13px; text-align: center; }
-    .btn-settings:hover { background: #282a2c; color: #fff; }
-
-    /* Main Chat Layout */
-    #main { flex: 1; display: flex; flex-direction: column; height: 100%; width: 100%; position: relative; background: #131314; }
-    .top-bar { height: 56px; display: flex; align-items: center; padding: 0 16px; border-bottom: 1px solid #282a2c; gap: 14px; background: #131314; }
-    .menu-btn { background: none; border: none; color: #e3e3e3; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .title-area { font-size: 16px; font-weight: 600; color: #e3e3e3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-    /* Messages Display */
-    .chat-container { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
-    .message { max-width: 88%; padding: 12px 16px; border-radius: 12px; line-height: 1.5; font-size: 14.5px; word-break: break-word; }
-    .message.user { align-self: flex-end; background: #2b2c2f; color: #ffffff; border-bottom-right-radius: 4px; }
-    .message.ai { align-self: flex-start; background: #1e1f20; color: #e3e3e3; border: 1px solid #333538; border-bottom-left-radius: 4px; }
-    .message img { max-width: 100%; border-radius: 8px; margin-top: 8px; display: block; }
-    .message pre { background: #000; padding: 10px; border-radius: 6px; overflow-x: auto; margin: 8px 0; font-family: monospace; font-size: 13px; }
-
-    /* Input Bar */
-    .input-bar { padding: 12px 16px; display: flex; gap: 10px; background: #131314; border-top: 1px solid #282a2c; align-items: center; }
-    .input-bar input { flex: 1; padding: 12px 18px; border-radius: 24px; border: 1px solid #3c4043; background: #1e1f20; color: #fff; outline: none; font-size: 14.5px; }
-    .input-bar input:focus { border-color: #a8c7fa; }
-    .input-bar button { padding: 12px 20px; border-radius: 24px; border: none; background: #a8c7fa; color: #040e1e; font-weight: bold; cursor: pointer; flex-shrink: 0; }
-
-    /* Settings Modal */
-    #settings-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; }
-    .modal-content { background: #1e1f20; border: 1px solid #3c4043; border-radius: 12px; padding: 20px; width: 90%; max-width: 400px; }
-    .modal-content h3 { margin-bottom: 12px; font-size: 16px; }
-    .modal-content input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #3c4043; background: #131314; color: #fff; margin-bottom: 14px; font-size: 14px; }
-    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
-    .modal-actions button { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; }
-    .btn-cancel { background: #282a2c; color: #e3e3e3; }
-    .btn-save { background: #a8c7fa; color: #040e1e; }
-  </style>
 </head>
 <body>
 
@@ -88,11 +31,11 @@
   <div id="main">
     <div class="top-bar">
       <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-      <div class="title-area" id="current-mode-title">Chat Bebas</div>
+      <div class="title-area" id="current-mode-title">💬 Chat Bebas (Uncensored)</div>
     </div>
     <div class="chat-container" id="chat-box"></div>
     <div class="input-bar">
-      <input type="text" id="user-input" placeholder="Ketik pesan..." onkeypress="handleKey(event)">
+      <input type="text" id="user-input" placeholder="Ketik pesan atau instruksi..." onkeypress="handleKey(event)">
       <button onclick="sendMessage()">Kirim</button>
     </div>
   </div>
@@ -115,5 +58,4 @@
   <script src="github.js"></script>
   <script src="app.js"></script>
 </body>
-  </html>
-  
+</html>
