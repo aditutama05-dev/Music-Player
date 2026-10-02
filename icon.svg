@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1f20"/>
+      <stop offset="100%" stop-color="#0a0a0a"/>
+    </linearGradient>
+    <linearGradient id="glow-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a8c7fa"/>
+      <stop offset="100%" stop-color="#004a77"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Rounded Canvas -->
+  <rect width="512" height="512" rx="110" fill="url(#bg-grad)"/>
+  <rect x="16" y="16" width="480" height="480" rx="94" fill="none" stroke="#282a2c" stroke-width="4"/>
+
+  <!-- Codex Brain / Node Core Graphic -->
+  <g transform="translate(64, 64) scale(0.75)">
+    <!-- Circuit Connections -->
+    <path d="M 256 90 L 256 160 M 256 352 L 256 422 M 90 256 L 160 256 M 352 256 L 422 256" stroke="#3c4043" stroke-width="8" stroke-linecap="round"/>
+    <path d="M 140 140 L 190 190 M 322 322 L 372 372 M 140 372 L 190 322 M 322 190 L 372 140" stroke="#3c4043" stroke-width="8" stroke-linecap="round"/>
+    
+    <!-- Outer Node Dots -->
+    <circle cx="256" cy="90" r="14" fill="#a8c7fa"/>
+    <circle cx="256" cy="422" r="14" fill="#a8c7fa"/>
+    <circle cx="90" cy="256" r="14" fill="#a8c7fa"/>
+    <circle cx="422" cy="256" r="14" fill="#a8c7fa"/>
+
+    <!-- Central AI Diamond / Shield -->
+    <polygon points="256,150 362,256 256,362 150,256" fill="url(#glow-grad)" filter="drop-shadow(0px 8px 16px rgba(0,74,119,0.5))"/>
+
+    <!-- Code Brackets Sign < / > in Center -->
+    <path d="M 225 220 L 190 256 L 225 292" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 287 220 L 322 256 L 287 292" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="266" y1="215" x2="246" y2="297" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+  </g>
+</svg>
+        
