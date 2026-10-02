@@ -18,16 +18,25 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate Fallback PNG Icon
+        run: |
+          node generate-icon.js
+
       - name: Verify Web Core Files
         run: |
           echo "Memeriksa kelengkapan file..."
-          for file in index.html style.css app.js sw.js manifest.json icon.svg github.js pwa-register.js; do
+          for file in index.html style.css app.js sw.js manifest.json icon.svg icon-512.png github.js pwa-register.js; do
             if [ ! -f "$file" ]; then
               echo "Error: File $file tidak ditemukan!"
               exit 1
             fi
           done
-          echo "Semua file inti lengkap."
+          echo "Semua file inti lengkap dan terverifikasi."
 
       - name: Generate Release Version Tag
         id: version
@@ -38,7 +47,7 @@ jobs:
       - name: Bundle Web App Artifact
         run: |
           mkdir -p dist
-          cp -r index.html style.css app.js sw.js manifest.json icon.svg github.js pwa-register.js dist/
+          cp -r index.html style.css app.js sw.js manifest.json icon.svg icon-512.png github.js pwa-register.js dist/
           cd dist && zip -r ../personal-ai-package.zip ./* && cd ..
 
       - name: Publish to GitHub Releases
@@ -50,7 +59,7 @@ jobs:
             Build otomatis Personal AI Codex berhasil selesai.
             - Status: Sukses terkompilasi
             - Commit: `${{ github.sha }}`
-            - Paket: `personal-ai-package.zip` (berisi seluruh modul PWA, GitHub Codex, & Style)
+            - Paket: `personal-ai-package.zip` (berisi seluruh aset Web, PWA, icon-512, dan integrasi Codex)
           files: personal-ai-package.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
