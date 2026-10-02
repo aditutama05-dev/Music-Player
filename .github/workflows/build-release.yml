@@ -31,7 +31,7 @@ jobs:
       - name: Verify Web Core Files
         run: |
           echo "Memeriksa kelengkapan file..."
-          for file in index.html style.css app.js sw.js manifest.json icon.svg icon-512.png github.js copy-helper.js pwa-register.js; do
+          for file in index.html style.css app.js sw.js manifest.json icon.svg icon-512.png github.js copy-helper.js pwa-register.js FEATURES.md; do
             if [ ! -f "$file" ]; then
               echo "Error: File $file tidak ditemukan!"
               exit 1
@@ -42,13 +42,13 @@ jobs:
       - name: Generate Release Version Tag
         id: version
         run: |
-          TAG_NAME="v1.1.$(date +'%Y%m%d%H%M%S')"
+          TAG_NAME="v1.2.$(date +'%Y%m%d%H%M%S')"
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
 
       - name: Bundle Web App Artifact
         run: |
           mkdir -p dist
-          cp -r index.html style.css app.js sw.js manifest.json icon.svg icon-512.png github.js copy-helper.js pwa-register.js dist/
+          cp -r index.html style.css app.js sw.js manifest.json icon.svg icon-512.png github.js copy-helper.js pwa-register.js FEATURES.md dist/
           cd dist && zip -r ../personal-ai-package.zip ./* && cd ..
 
       - name: Publish to GitHub Releases
@@ -57,10 +57,10 @@ jobs:
           tag_name: ${{ steps.version.outputs.tag_name }}
           name: Personal AI Release ${{ steps.version.outputs.tag_name }}
           body: |
-            Build otomatis Personal AI Codex (Pembaruan UI & Isolasi Mode).
+            Build otomatis Personal AI (UI Mandiri AI Agent Codex & Katalog Fitur).
             - Status: Sukses terkompilasi
             - Commit: `${{ github.sha }}`
-            - Pembaruan: Ikon salin dokumen, tombol tambah (+), isolasi sesi chat per mode, auto-detect prompt gambar.
+            - Pembaruan: Tampilan mandiri AI Agent bergaya ChatGPT Codex Cloud, selector repo & branch GitHub, integrasi katalog FEATURES.md.
           files: personal-ai-package.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
