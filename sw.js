@@ -1,4 +1,4 @@
-const CACHE_NAME = 'personal-ai-v2';
+const CACHE_NAME = 'personal-ai-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const ASSETS_TO_CACHE = [
   './copy-helper.js',
   './pwa-register.js',
   './manifest.json',
+  './FEATURES.md',
   './icon.svg',
   './icon-512.png'
 ];
@@ -22,7 +23,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Activate Event (Bersihkan cache versi lama)
+// Activate Event (Bersihkan cache lama)
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -42,7 +43,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
-  // Abaikan request API luar (Pollinations & GitHub API) agar selalu realtime
+  // Abaikan request API luar agar respon selalu realtime
   if (event.request.url.includes('pollinations.ai') || event.request.url.includes('api.github.com')) {
     return;
   }
@@ -63,3 +64,4 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
+    
