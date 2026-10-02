@@ -18,10 +18,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+      - name: Verify Web Core Files
+        run: |
+          echo "Memeriksa kelengkapan file..."
+          for file in index.html style.css app.js sw.js manifest.json icon.svg github.js pwa-register.js; do
+            if [ ! -f "$file" ]; then
+              echo "Error: File $file tidak ditemukan!"
+              exit 1
+            fi
+          done
+          echo "Semua file inti lengkap."
 
       - name: Generate Release Version Tag
         id: version
@@ -32,19 +38,19 @@ jobs:
       - name: Bundle Web App Artifact
         run: |
           mkdir -p dist
-          cp -r ./* dist/ 2>/dev/null || true
-          rm -rf dist/dist dist/.git dist/.github
+          cp -r index.html style.css app.js sw.js manifest.json icon.svg github.js pwa-register.js dist/
           cd dist && zip -r ../personal-ai-package.zip ./* && cd ..
 
       - name: Publish to GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.tag_name }}
-          name: Release ${{ steps.version.outputs.tag_name }}
+          name: Personal AI Release ${{ steps.version.outputs.tag_name }}
           body: |
-            Build otomatis berhasil selesai.
-            - Status: Sukses
-            - Sumber: Commit `${{ github.sha }}`
+            Build otomatis Personal AI Codex berhasil selesai.
+            - Status: Sukses terkompilasi
+            - Commit: `${{ github.sha }}`
+            - Paket: `personal-ai-package.zip` (berisi seluruh modul PWA, GitHub Codex, & Style)
           files: personal-ai-package.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
