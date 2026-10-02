@@ -7,27 +7,26 @@
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
   <meta name="theme-color" content="#1e1f20">
-  <!-- Pustaka Syntax Highlighter & Markdown Parser -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
 <body>
 
-  <!-- Slide Bar -->
+  <!-- Sidebar -->
   <div id="sidebar">
     <div class="sidebar-header">
       <button class="btn-new" onclick="startNewChat()">＋ Chat Baru</button>
     </div>
     <div class="nav-modes">
       <div class="mode-item active" id="mode-chat" onclick="setMode('chat')">💬 Chat Bebas</div>
-      <div class="mode-item" id="mode-codex" onclick="setMode('codex')">💻 GitHub Codex</div>
+      <div class="mode-item" id="mode-agent" onclick="setMode('agent')">🤖 AI Agent</div>
       <div class="mode-item" id="mode-image" onclick="setMode('image')">🎨 Buat Gambar</div>
     </div>
     <div class="history-label">Riwayat Chat</div>
     <div class="history-list" id="chat-history"></div>
     <div class="sidebar-footer">
-      <button class="btn-settings" onclick="openSettings()">⚙️ Pengaturan GitHub Token</button>
+      <button class="btn-settings" onclick="openSettings()">⚙️️ Pengaturan GitHub Token</button>
     </div>
   </div>
 
@@ -37,11 +36,57 @@
       <button class="menu-btn" onclick="toggleSidebar()">☰</button>
       <div class="title-area" id="current-mode-title">💬 Chat Bebas (Uncensored)</div>
     </div>
-    <div class="chat-container" id="chat-box"></div>
-    <div class="input-bar">
-      <button class="btn-add" onclick="alert('Fitur attachment dan alat tambahan akan segera hadir!')" title="Tambah">＋</button>
-      <input type="text" id="user-input" placeholder="Ketik pesan atau instruksi..." onkeypress="handleKey(event)">
-      <button class="btn-send" onclick="sendMessage()">Kirim</button>
+
+    <!-- Tampilan Mode Chat / Image Biasa -->
+    <div id="chat-view" class="view-panel">
+      <div class="chat-container" id="chat-box"></div>
+      <div class="input-bar">
+        <button class="btn-add" onclick="alert('Fitur attachment dan alat tambahan akan segera hadir!')" title="Tambah">＋</button>
+        <input type="text" id="user-input" placeholder="Ketik pesan atau instruksi..." onkeypress="handleKey(event)">
+        <button class="btn-send" onclick="sendMessage()">Kirim</button>
+      </div>
+    </div>
+
+    <!-- Tampilan Khusus AI Agent (Ala Codex Cloud) -->
+    <div id="agent-view" class="view-panel" style="display: none;">
+      <div class="agent-container">
+        <h2 class="agent-headline">Apa yang sebaiknya kita kerjakan?</h2>
+        
+        <!-- Bar Selector Environment & Repo -->
+        <div class="agent-selector-bar">
+          <div class="selector-item">
+            <span class="selector-icon">💻</span>
+            <select id="agent-repo-select" onchange="onRepoSelected()">
+              <option value="">Pilih Repositori...</option>
+            </select>
+          </div>
+          <div class="selector-item">
+            <span class="selector-icon">🌿</span>
+            <select id="agent-branch-select">
+              <option value="main">main</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Input Box Tugas Codex -->
+        <div class="agent-input-card">
+          <textarea id="agent-task-input" placeholder="Deskripsikan tugas (contoh: Analisa dan perbaiki error, tambahkan fungsi...)" rows="3"></textarea>
+          <div class="agent-card-footer">
+            <span class="agent-hint">Token PAT aktif</span>
+            <button class="btn-run-agent" onclick="runAgentTask()">Jalankan Tugas</button>
+          </div>
+        </div>
+
+        <!-- Tab & Hasil Analisa -->
+        <div class="agent-results-header">
+          <div class="agent-tab active">Tugas</div>
+          <div class="agent-tab">Diff</div>
+          <div class="agent-tab">Log</div>
+        </div>
+        <div class="agent-output-box" id="agent-output">
+          Pilih repositori dan masukkan instruksi untuk memulai analisa agen.
+        </div>
+      </div>
     </div>
   </div>
 
@@ -49,7 +94,7 @@
   <div id="settings-modal">
     <div class="modal-content">
       <h3>Pengaturan GitHub PAT</h3>
-      <p style="font-size: 12px; color: #8e918f; margin-bottom: 8px;">Token disimpan lokal di perangkat untuk akses fitur Codex GitHub.</p>
+      <p style="font-size: 12px; color: #8e918f; margin-bottom: 8px;">Token disimpan lokal di perangkat untuk akses repositori GitHub.</p>
       <input type="password" id="gh-token-input" placeholder="ghp_xxxxxx...">
       <div class="modal-actions">
         <button class="btn-cancel" onclick="closeSettings()">Batal</button>
@@ -64,5 +109,4 @@
   <script src="github.js"></script>
   <script src="app.js"></script>
 </body>
-        </html>
-        
+</html>
