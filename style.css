@@ -142,7 +142,7 @@ body {
   color: #ffffff;
 }
 
-/* Tampilan Utama */
+/* Main View Panel Router */
 #main {
   flex: 1;
   display: flex;
@@ -161,6 +161,7 @@ body {
   border-bottom: 1px solid #282a2c;
   gap: 14px;
   background: #131314;
+  flex-shrink: 0;
 }
 
 .menu-btn {
@@ -169,9 +170,6 @@ body {
   color: #e3e3e3;
   font-size: 22px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .title-area {
@@ -183,7 +181,15 @@ body {
   text-overflow: ellipsis;
 }
 
-/* Area Bubble Pesan */
+.view-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 56px);
+  overflow: hidden;
+}
+
+/* Mode Chat Standard */
 .chat-container {
   flex: 1;
   overflow-y: auto;
@@ -236,7 +242,7 @@ body {
   border: 1px solid #333;
 }
 
-/* Input Bar */
+/* Input Bar Chat */
 .input-bar {
   padding: 12px 16px;
   display: flex;
@@ -244,6 +250,7 @@ body {
   background: #131314;
   border-top: 1px solid #282a2c;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .btn-add {
@@ -292,7 +299,136 @@ body {
   flex-shrink: 0;
 }
 
-/* Modal Pengaturan */
+/* Antarmuka Mandiri AI Agent (Codex UI) */
+.agent-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.agent-headline {
+  font-size: 19px;
+  font-weight: 600;
+  color: #e3e3e3;
+  margin-bottom: 2px;
+}
+
+.agent-selector-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.selector-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1e1f20;
+  border: 1px solid #3c4043;
+  padding: 6px 12px;
+  border-radius: 8px;
+  flex: 1;
+  min-width: 140px;
+}
+
+.selector-item select {
+  background: transparent;
+  border: none;
+  color: #e3e3e3;
+  font-size: 13.5px;
+  outline: none;
+  width: 100%;
+  cursor: pointer;
+}
+
+.selector-item select option {
+  background: #1e1f20;
+  color: #e3e3e3;
+}
+
+.agent-input-card {
+  background: #1e1f20;
+  border: 1px solid #3c4043;
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.agent-input-card textarea {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  outline: none;
+  font-size: 14.5px;
+  resize: none;
+  line-height: 1.5;
+}
+
+.agent-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #282a2c;
+  padding-top: 10px;
+}
+
+.agent-hint {
+  font-size: 12px;
+  color: #8e918f;
+}
+
+.btn-run-agent {
+  background: #a8c7fa;
+  color: #040e1e;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 13.5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.agent-results-header {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid #282a2c;
+  padding-bottom: 6px;
+}
+
+.agent-tab {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #8e918f;
+}
+
+.agent-tab.active {
+  background: #282a2c;
+  color: #a8c7fa;
+}
+
+.agent-output-box {
+  background: #161718;
+  border: 1px solid #282a2c;
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 180px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #c4c7c5;
+  }
+
+/* Modal Settings */
 #settings-modal {
   display: none;
   position: fixed;
