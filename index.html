@@ -29,6 +29,11 @@
     .history-item:hover { background: #282a2c; color: #fff; }
     .history-item.active-chat { background: #282a2c; color: #a8c7fa; }
 
+    /* Sidebar Footer Settings */
+    .sidebar-footer { padding: 12px 16px; border-top: 1px solid #282a2c; }
+    .btn-settings { width: 100%; padding: 10px; background: transparent; border: 1px solid #3c4043; border-radius: 8px; color: #c4c7c5; cursor: pointer; font-size: 13px; text-align: center; }
+    .btn-settings:hover { background: #282a2c; color: #fff; }
+
     /* Main Chat Layout */
     #main { flex: 1; display: flex; flex-direction: column; height: 100%; width: 100%; position: relative; background: #131314; }
     .top-bar { height: 56px; display: flex; align-items: center; padding: 0 16px; border-bottom: 1px solid #282a2c; gap: 14px; background: #131314; }
@@ -48,6 +53,16 @@
     .input-bar input { flex: 1; padding: 12px 18px; border-radius: 24px; border: 1px solid #3c4043; background: #1e1f20; color: #fff; outline: none; font-size: 14.5px; }
     .input-bar input:focus { border-color: #a8c7fa; }
     .input-bar button { padding: 12px 20px; border-radius: 24px; border: none; background: #a8c7fa; color: #040e1e; font-weight: bold; cursor: pointer; flex-shrink: 0; }
+
+    /* Settings Modal */
+    #settings-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; }
+    .modal-content { background: #1e1f20; border: 1px solid #3c4043; border-radius: 12px; padding: 20px; width: 90%; max-width: 400px; }
+    .modal-content h3 { margin-bottom: 12px; font-size: 16px; }
+    .modal-content input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #3c4043; background: #131314; color: #fff; margin-bottom: 14px; font-size: 14px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+    .modal-actions button { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; }
+    .btn-cancel { background: #282a2c; color: #e3e3e3; }
+    .btn-save { background: #a8c7fa; color: #040e1e; }
   </style>
 </head>
 <body>
@@ -64,6 +79,9 @@
     </div>
     <div class="history-label">Riwayat Chat</div>
     <div class="history-list" id="chat-history"></div>
+    <div class="sidebar-footer">
+      <button class="btn-settings" onclick="openSettings()">⚙️ Pengaturan GitHub Token</button>
+    </div>
   </div>
 
   <!-- Main View -->
@@ -79,6 +97,23 @@
     </div>
   </div>
 
+  <!-- Settings Modal -->
+  <div id="settings-modal">
+    <div class="modal-content">
+      <h3>Pengaturan GitHub PAT</h3>
+      <p style="font-size: 12px; color: #8e918f; margin-bottom: 8px;">Token disimpan lokal di perangkat untuk akses fitur Codex GitHub.</p>
+      <input type="password" id="gh-token-input" placeholder="ghp_xxxxxx...">
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeSettings()">Batal</button>
+        <button class="btn-save" onclick="saveSettings()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="pwa-register.js"></script>
+  <script src="github.js"></script>
   <script src="app.js"></script>
 </body>
-</html>
+  </html>
+  
