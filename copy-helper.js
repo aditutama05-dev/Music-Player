@@ -9,7 +9,6 @@ function attachCodeCopyButtons(container) {
     const copyBtn = document.createElement('button');
     copyBtn.className = 'btn-copy-code';
     copyBtn.title = 'Salin Kode';
-    // Ikon dokumen kertas bertumpuk SVG
     copyBtn.innerHTML = `
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -50,7 +49,7 @@ function attachCodeCopyButtons(container) {
           `;
         }, 2000);
       } catch (err) {
-        alert('Gagal menyalin');
+        alert('Gagal menyalin teks');
       }
     };
 
@@ -59,4 +58,3 @@ function attachCodeCopyButtons(container) {
 }
 
 window.attachCodeCopyButtons = attachCodeCopyButtons;
-      
