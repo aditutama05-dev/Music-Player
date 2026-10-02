@@ -7,13 +7,14 @@
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
   <meta name="theme-color" content="#1e1f20">
+  <!-- Pustaka Syntax Highlighter & Markdown Parser -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
 <body>
 
-  <!-- Sidebar -->
+  <!-- Slide Bar -->
   <div id="sidebar">
     <div class="sidebar-header">
       <button class="btn-new" onclick="startNewChat()">＋ Chat Baru</button>
@@ -37,16 +38,14 @@
       <div class="title-area" id="current-mode-title">💬 Chat Bebas (Uncensored)</div>
     </div>
     <div class="chat-container" id="chat-box"></div>
-    
-    <!-- Input Bar dengan tombol Tambah (+) ala Gemini -->
     <div class="input-bar">
-      <button class="btn-add" onclick="toggleToolsModal()" title="Fitur Tambahan">＋</button>
+      <button class="btn-add" onclick="alert('Fitur attachment dan alat tambahan akan segera hadir!')" title="Tambah">＋</button>
       <input type="text" id="user-input" placeholder="Ketik pesan atau instruksi..." onkeypress="handleKey(event)">
       <button class="btn-send" onclick="sendMessage()">Kirim</button>
     </div>
   </div>
 
-  <!-- Modal GitHub Settings -->
+  <!-- Settings Modal -->
   <div id="settings-modal">
     <div class="modal-content">
       <h3>Pengaturan GitHub PAT</h3>
@@ -65,4 +64,5 @@
   <script src="github.js"></script>
   <script src="app.js"></script>
 </body>
-</html>
+        </html>
+        
