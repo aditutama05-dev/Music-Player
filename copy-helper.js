@@ -1,4 +1,3 @@
-// Helper untuk menyematkan tombol Copy di setiap blok kode
 function attachCodeCopyButtons(container) {
   const codeBlocks = container.querySelectorAll('pre');
 
@@ -9,19 +8,27 @@ function attachCodeCopyButtons(container) {
 
     const copyBtn = document.createElement('button');
     copyBtn.className = 'btn-copy-code';
-    copyBtn.innerText = 'Salin';
+    copyBtn.title = 'Salin Kode';
+    // Ikon dokumen kertas bertumpuk SVG
+    copyBtn.innerHTML = `
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+      </svg>
+    `;
     copyBtn.style.cssText = `
       position: absolute;
-      top: 6px;
-      right: 6px;
+      top: 8px;
+      right: 8px;
       background: #2b2c2f;
       color: #c4c7c5;
-      border: 1px solid #3c4043;
-      border-radius: 4px;
-      padding: 3px 8px;
-      font-size: 11px;
+      border: 1px solid #444746;
+      border-radius: 6px;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      opacity: 0.85;
       z-index: 10;
     `;
 
@@ -29,14 +36,21 @@ function attachCodeCopyButtons(container) {
       const code = pre.querySelector('code') ? pre.querySelector('code').innerText : pre.innerText;
       try {
         await navigator.clipboard.writeText(code);
-        copyBtn.innerText = 'Tersalin!';
-        copyBtn.style.color = '#a8c7fa';
+        copyBtn.innerHTML = `
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#a8c7fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        `;
         setTimeout(() => {
-          copyBtn.innerText = 'Salin';
-          copyBtn.style.color = '#c4c7c5';
+          copyBtn.innerHTML = `
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          `;
         }, 2000);
       } catch (err) {
-        copyBtn.innerText = 'Gagal';
+        alert('Gagal menyalin');
       }
     };
 
@@ -45,3 +59,4 @@ function attachCodeCopyButtons(container) {
 }
 
 window.attachCodeCopyButtons = attachCodeCopyButtons;
+      
