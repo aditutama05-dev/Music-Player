@@ -26,7 +26,7 @@
     <div class="history-label">Riwayat Chat</div>
     <div class="history-list" id="chat-history"></div>
     <div class="sidebar-footer">
-      <button class="btn-settings" onclick="openSettings()">⚙️️ Pengaturan GitHub Token</button>
+      <button class="btn-settings" onclick="openSettings()">⚙ Pengaturan GitHub Token</button>
     </div>
   </div>
 
@@ -40,8 +40,19 @@
     <!-- Tampilan Mode Chat / Image Biasa -->
     <div id="chat-view" class="view-panel">
       <div class="chat-container" id="chat-box"></div>
+
+      <!-- Area Pratinjau Lampiran File/Gambar -->
+      <div id="attachment-preview-bar" style="display: none;">
+        <div class="preview-item">
+          <span id="preview-filename">file.png</span>
+          <button class="btn-remove-attachment" onclick="removeAttachment()">✕</button>
+        </div>
+      </div>
+
       <div class="input-bar">
-        <button class="btn-add" onclick="alert('Fitur attachment dan alat tambahan akan segera hadir!')" title="Tambah">＋</button>
+        <!-- Input File Tersembunyi -->
+        <input type="file" id="file-uploader" style="display: none;" onchange="handleFileSelected(event)">
+        <button class="btn-add" onclick="triggerFileUpload()" title="Unggah File atau Gambar">＋</button>
         <input type="text" id="user-input" placeholder="Ketik pesan atau instruksi..." onkeypress="handleKey(event)">
         <button class="btn-send" onclick="sendMessage()">Kirim</button>
       </div>
