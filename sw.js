@@ -1,4 +1,4 @@
-const CACHE_NAME = 'personal-ai-v3';
+const CACHE_NAME = 'personal-ai-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
