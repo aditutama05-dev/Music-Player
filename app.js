@@ -1,7 +1,13 @@
 let currentMode = 'chat';
 let chats = JSON.parse(localStorage.getItem('my_ai_chats') || '{}');
 let currentChatId = localStorage.getItem('current_chat_id') || Date.now().toString();
-let currentAttachment = null; // Menyimpan file aktif yang dipilih
+let currentAttachment = null; 
+let activeSheetChatId = null;
+let currentExportText = '';
+let isSpeaking = false;
+
+// Memori Konteks Gambar (Seed & Prompt Terakhir)
+let lastImageContext = JSON.parse(localStorage.getItem('my_ai_last_img') || 'null');
 
 // Inisialisasi Markdown & Syntax Highlighting
 if (typeof marked !== 'undefined') {
@@ -18,12 +24,12 @@ if (typeof marked !== 'undefined') {
 
 // Inisialisasi Chat Sesi
 if (!chats[currentChatId]) {
-  chats[currentChatId] = { title: 'Chat Baru', mode: currentMode, messages: [] };
+  chats[currentChatId] = { title: 'Chat Baru', mode: currentMode, messages: [], pinned: false };
   localStorage.setItem('my_ai_chats', JSON.stringify(chats));
   localStorage.setItem('current_chat_id', currentChatId);
 }
 
-// Router Pergantian Mode & View Panel
+// Router Pergantian Mode
 function setMode(mode) {
   currentMode = mode;
   document.querySelectorAll('.mode-item').forEach(el => el.classList.remove('active'));
@@ -47,7 +53,9 @@ function setMode(mode) {
   } else {
     agentView.style.display = 'none';
     chatView.style.display = 'flex';
-    startNewChat();
+    if (chats[currentChatId] && chats[currentChatId].messages && chats[currentChatId].messages.length > 0) {
+      startNewChat();
+    }
   }
 
   if (window.innerWidth <= 768) toggleSidebar();
@@ -57,20 +65,41 @@ function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('hidden');
 }
 
-// History Obrolan (Mode Chat & Image)
+// Riwayat Percakapan dengan Fitur Pin, Rename, dan Delete
 function renderHistory() {
   const list = document.getElementById('chat-history');
   list.innerHTML = '';
 
-  const keys = Object.keys(chats).reverse();
+  const keys = Object.keys(chats).sort((a, b) => {
+    const pinA = chats[a].pinned ? 1 : 0;
+    const pinB = chats[b].pinned ? 1 : 0;
+    if (pinA !== pinB) return pinB - pinA;
+    return b.localeCompare(a);
+  });
+
   keys.forEach(id => {
     if (chats[id].mode && chats[id].mode !== currentMode) return;
 
-    const item = document.createElement('div');
-    item.className = `history-item ${id === currentChatId ? 'active-chat' : ''}`;
-    item.innerText = chats[id].title || 'Percakapan';
-    item.onclick = () => loadChat(id);
-    list.appendChild(item);
+    const itemContainer = document.createElement('div');
+    itemContainer.className = `history-item-container ${id === currentChatId ? 'active-chat' : ''}`;
+
+    const titleSpan = document.createElement('span');
+    titleSpan.className = 'history-title';
+    titleSpan.innerHTML = `${chats[id].pinned ? '📌 ' : ''}${chats[id].title || 'Percakapan'}`;
+    titleSpan.onclick = () => loadChat(id);
+
+    const btnMore = document.createElement('button');
+    btnMore.className = 'btn-chat-more';
+    btnMore.innerHTML = '⋮';
+    btnMore.title = 'Opsi Chat';
+    btnMore.onclick = (e) => {
+      e.stopPropagation();
+      openChatOptions(id);
+    };
+
+    itemContainer.appendChild(titleSpan);
+    itemContainer.appendChild(btnMore);
+    list.appendChild(itemContainer);
   });
 }
 
@@ -89,7 +118,7 @@ function loadChat(id) {
 
 function startNewChat() {
   currentChatId = Date.now().toString();
-  chats[currentChatId] = { title: 'Chat Baru', mode: currentMode, messages: [] };
+  chats[currentChatId] = { title: 'Chat Baru', mode: currentMode, messages: [], pinned: false };
   localStorage.setItem('my_ai_chats', JSON.stringify(chats));
   localStorage.setItem('current_chat_id', currentChatId);
 
@@ -101,7 +130,190 @@ function startNewChat() {
   }
 }
 
-// Render Bubble Gambar Lengkap dengan Tombol Aksi (Unduh, Salin, Berbagi)
+// Bottom Sheet Kontrol Riwayat Percakapan
+function openChatOptions(chatId) {
+  activeSheetChatId = chatId;
+  const sheet = document.getElementById('chat-options-sheet');
+  const pinLabel = document.getElementById('sheet-pin-label');
+  if (chats[chatId] && chats[chatId].pinned) {
+    pinLabel.innerText = 'Lepas Sematan';
+  } else {
+    pinLabel.innerText = 'Sematkan';
+  }
+  sheet.style.display = 'flex';
+}
+
+function closeChatOptions() {
+  const sheet = document.getElementById('chat-options-sheet');
+  if (sheet) sheet.style.display = 'none';
+  activeSheetChatId = null;
+}
+
+function handlePinChat() {
+  if (!activeSheetChatId || !chats[activeSheetChatId]) return;
+  chats[activeSheetChatId].pinned = !chats[activeSheetChatId].pinned;
+  localStorage.setItem('my_ai_chats', JSON.stringify(chats));
+  renderHistory();
+  closeChatOptions();
+}
+
+function handleRenameChat() {
+  if (!activeSheetChatId || !chats[activeSheetChatId]) return;
+  const currentTitle = chats[activeSheetChatId].title || '';
+  const newTitle = prompt('Ubah nama percakapan:', currentTitle);
+  if (newTitle && newTitle.trim()) {
+    chats[activeSheetChatId].title = newTitle.trim();
+    localStorage.setItem('my_ai_chats', JSON.stringify(chats));
+    renderHistory();
+  }
+  closeChatOptions();
+}
+
+function handleDeleteChat() {
+  if (!activeSheetChatId || !chats[activeSheetChatId]) return;
+  if (confirm('Hapus percakapan ini secara permanen?')) {
+    delete chats[activeSheetChatId];
+    localStorage.setItem('my_ai_chats', JSON.stringify(chats));
+
+    if (activeSheetChatId === currentChatId) {
+      const remaining = Object.keys(chats);
+      if (remaining.length > 0) {
+        loadChat(remaining[remaining.length - 1]);
+      } else {
+        startNewChat();
+      }
+    } else {
+      renderHistory();
+    }
+  }
+  closeChatOptions();
+}
+
+// Action Bar Respon AI Ala Gemini
+function createAiActionBar(responseText) {
+  const bar = document.createElement('div');
+  bar.className = 'ai-response-actions';
+
+  // 1. Muat Ulang (Regenerate)
+  const btnRegen = document.createElement('button');
+  btnRegen.className = 'btn-ai-action';
+  btnRegen.title = 'Muat ulang respon';
+  btnRegen.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>`;
+  btnRegen.onclick = () => regenerateLastResponse();
+
+  // 2. Salin Teks Respon
+  const btnCopy = document.createElement('button');
+  btnCopy.className = 'btn-ai-action';
+  btnCopy.title = 'Salin teks';
+  btnCopy.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+  btnCopy.onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(responseText);
+      btnCopy.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a8c7fa" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>`;
+      setTimeout(() => {
+        btnCopy.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+      }, 2000);
+    } catch (e) {
+      alert('Gagal menyalin teks.');
+    }
+  };
+
+  // 3. Speaker TTS
+  const btnSpeaker = document.createElement('button');
+  btnSpeaker.className = 'btn-ai-action';
+  btnSpeaker.title = 'Bacakan teks';
+  btnSpeaker.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>`;
+  btnSpeaker.onclick = () => toggleSpeech(responseText, btnSpeaker);
+
+  // 4. Menu Titik Tiga (Ekspor)
+  const btnMore = document.createElement('button');
+  btnMore.className = 'btn-ai-action';
+  btnMore.title = 'Opsi lainnya';
+  btnMore.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>`;
+  btnMore.onclick = () => openExportModal(responseText);
+
+  bar.appendChild(btnRegen);
+  bar.appendChild(btnCopy);
+  bar.appendChild(btnSpeaker);
+  bar.appendChild(btnMore);
+  return bar;
+}
+
+// Fungsi Text-to-Speech (TTS)
+function toggleSpeech(text, btnElement) {
+  if (!('speechSynthesis' in window)) {
+    alert('Browser tidak mendukung pembacaan suara.');
+    return;
+  }
+
+  if (isSpeaking) {
+    window.speechSynthesis.cancel();
+    isSpeaking = false;
+    btnElement.classList.remove('speaking');
+    return;
+  }
+
+  const cleanText = text.replace(/[`*#_\[\]()]/g, '');
+  const utterance = new SpeechSynthesisUtterance(cleanText);
+  utterance.lang = 'id-ID';
+
+  utterance.onend = () => {
+    isSpeaking = false;
+    btnElement.classList.remove('speaking');
+  };
+
+  utterance.onerror = () => {
+    isSpeaking = false;
+    btnElement.classList.remove('speaking');
+  };
+
+  isSpeaking = true;
+  btnElement.classList.add('speaking');
+  window.speechSynthesis.speak(utterance);
+}
+
+// Modal Ekspor Dokumen
+function openExportModal(text) {
+  currentExportText = text;
+  document.getElementById('export-modal').style.display = 'flex';
+}
+
+function closeExportModal() {
+  document.getElementById('export-modal').style.display = 'none';
+  currentExportText = '';
+}
+
+function exportCurrentResponse(format) {
+  if (!currentExportText) return;
+  const blob = new Blob([currentExportText], { type: format === 'doc' ? 'application/msword' : 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `response-${Date.now()}.${format === 'doc' ? 'doc' : 'txt'}`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  closeExportModal();
+}
+
+// Regenerate Percakapan Terakhir
+async function regenerateLastResponse() {
+  const currentMsgs = chats[currentChatId].messages;
+  let lastUserMsg = null;
+  for (let i = currentMsgs.length - 1; i >= 0; i--) {
+    if (currentMsgs[i].role === 'user') {
+      lastUserMsg = currentMsgs[i].content;
+      break;
+    }
+  }
+  if (lastUserMsg) {
+    document.getElementById('user-input').value = lastUserMsg;
+    sendMessage();
+  }
+}
+
+// Render Bubble Gambar Minimalis (Simpan & Salin Saja)
 function renderImageBubble(container, imgUrl) {
   const wrapper = document.createElement('div');
   wrapper.className = 'image-bubble-container';
@@ -114,13 +326,14 @@ function renderImageBubble(container, imgUrl) {
   const actions = document.createElement('div');
   actions.className = 'image-actions';
 
-  // 1. Tombol Unduh
+  // 1. Simpan / Unduh (Icon Circle Minimalis)
   const btnDownload = document.createElement('button');
   btnDownload.className = 'btn-img-action';
-  btnDownload.innerHTML = '📥 Unduh';
+  btnDownload.title = 'Simpan Gambar';
+  btnDownload.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12l4 4 4-4"/></svg>`;
   btnDownload.onclick = async () => {
     try {
-      btnDownload.innerText = 'Mengunduh...';
+      btnDownload.style.opacity = '0.5';
       const res = await fetch(imgUrl);
       const blob = await res.blob();
       const blobUrl = URL.createObjectURL(blob);
@@ -131,52 +344,32 @@ function renderImageBubble(container, imgUrl) {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(blobUrl);
-      btnDownload.innerText = '✓ Terunduh';
-      setTimeout(() => btnDownload.innerHTML = '📥 Unduh', 2000);
+      btnDownload.style.opacity = '1';
     } catch (e) {
       window.open(imgUrl, '_blank');
-      btnDownload.innerHTML = '📥 Unduh';
+      btnDownload.style.opacity = '1';
     }
   };
 
-  // 2. Tombol Salin Link
+  // 2. Salin Gambar / Link (Icon Dual Rectangle)
   const btnCopy = document.createElement('button');
   btnCopy.className = 'btn-img-action';
-  btnCopy.innerHTML = '📋 Salin';
+  btnCopy.title = 'Salin Tautan';
+  btnCopy.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
   btnCopy.onclick = async () => {
     try {
       await navigator.clipboard.writeText(imgUrl);
-      btnCopy.innerText = '✓ Tersalin';
-      setTimeout(() => btnCopy.innerHTML = '📋 Salin', 2000);
+      btnCopy.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a8c7fa" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>`;
+      setTimeout(() => {
+        btnCopy.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+      }, 2000);
     } catch (e) {
-      alert('Gagal menyalin tautan');
+      alert('Gagal menyalin tautan.');
     }
   };
 
-  // 3. Tombol Berbagi (Web Share API)
-  const btnShare = document.createElement('button');
-  btnShare.className = 'btn-img-action';
-  btnShare.innerHTML = '🔗 Bagikan';
-  btnShare.onclick = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Gambar Hasil AI',
-          text: 'Lihat gambar yang dibuat oleh Personal AI:',
-          url: imgUrl
-        });
-      } catch (e) {
-        // Dibatalkan oleh pengguna
-      }
-    } else {
-      await navigator.clipboard.writeText(imgUrl);
-      alert('Tautan gambar disalin ke clipboard.');
-    }
-  };
-
-  actions.appendChild(btnDownload);
   actions.appendChild(btnCopy);
-  actions.appendChild(btnShare);
+  actions.appendChild(btnDownload);
 
   wrapper.appendChild(img);
   wrapper.appendChild(actions);
@@ -188,7 +381,6 @@ function appendMessage(role, content, type = 'text', fileData = null) {
   const msg = document.createElement('div');
   msg.className = `message ${role}`;
 
-  // Lampiran file/gambar dari pengguna jika tersedia
   if (fileData) {
     if (fileData.type && fileData.type.startsWith('image/')) {
       const attachImg = document.createElement('img');
@@ -205,16 +397,21 @@ function appendMessage(role, content, type = 'text', fileData = null) {
 
   if (type === 'image') {
     renderImageBubble(msg, content);
-  } else if (role === 'ai' && typeof marked !== 'undefined') {
+  } else if (role === 'ai') {
     const textNode = document.createElement('div');
-    textNode.innerHTML = marked.parse(content);
-    textNode.querySelectorAll('pre code').forEach(el => {
-      if (typeof hljs !== 'undefined') hljs.highlightElement(el);
-    });
-    if (window.attachCodeCopyButtons) {
-      window.attachCodeCopyButtons(textNode);
+    if (typeof marked !== 'undefined') {
+      textNode.innerHTML = marked.parse(content);
+      textNode.querySelectorAll('pre code').forEach(el => {
+        if (typeof hljs !== 'undefined') hljs.highlightElement(el);
+      });
+      if (window.attachCodeCopyButtons) {
+        window.attachCodeCopyButtons(textNode);
+      }
+    } else {
+      textNode.innerText = content;
     }
     msg.appendChild(textNode);
+    msg.appendChild(createAiActionBar(content));
   } else {
     const textNode = document.createElement('div');
     textNode.innerText = content;
@@ -226,7 +423,7 @@ function appendMessage(role, content, type = 'text', fileData = null) {
   return msg;
 }
 
-// Penanganan Lampiran File/Gambar
+// Penanganan Lampiran File
 function triggerFileUpload() {
   const fileInput = document.getElementById('file-uploader');
   if (fileInput) fileInput.click();
@@ -269,8 +466,8 @@ async function loadAgentRepos() {
   if (!window.GitHubAgent || !window.GitHubAgent.getToken()) {
     repoSelect.innerHTML = '<option value="">(Token PAT Belum Diatur)</option>';
     return;
-  }
-
+    }
+      
   try {
     const repos = await window.GitHubAgent.listUserRepos();
     repoSelect.innerHTML = '<option value="">Pilih Repositori...</option>';
@@ -356,7 +553,7 @@ function saveSettings() {
   closeSettings();
 }
 
-// Handler Kirim Pesan (Mode Chat Biasa)
+// Handler Kirim Pesan Utama
 async function sendMessage() {
   const input = document.getElementById('user-input');
   const text = input.value.trim();
@@ -374,22 +571,31 @@ async function sendMessage() {
   }
   renderHistory();
 
-  // Deteksi multi kata kunci pembuatan gambar langsung
   const lower = text.toLowerCase();
-  const isImageRequest = currentMode === 'image' || 
-    lower.startsWith('buat gambar') || 
-    lower.startsWith('buatkan gambar') || 
-    lower.startsWith('bikin gambar') || 
-    lower.startsWith('gambar ') || 
-    lower.startsWith('lukis ') ||
-    lower.startsWith('buat foto') ||
-    lower.startsWith('buatkan foto');
 
-  // 1. Eksekusi Gambar (Pollinations Image Engine)
+  // Deteksi Perintah Gambar / Modifikasi Outfit Kontekstual
+  const isDirectImageTrigger = /^(buatkan\s+gambar|bikinin\s+gue\s+gambar|bikin\s+gambar|buat\s+gambar|gambar|lukis|buatkan\s+foto|buat\s+foto)/i.test(lower);
+  const isImageModification = lastImageContext && /^(ubah|ganti|tambahkan|pakaikan|jadikan|kasih)\s+(outfit|baju|pakaian|jaket|warna|latar|background|gaya)/i.test(lower);
+  const isImageRequest = currentMode === 'image' || isDirectImageTrigger || isImageModification;
+
+  // 1. Eksekusi Gambar Visual Berkualitas Tinggi
   if (isImageRequest) {
-    const promptClean = text.replace(/^(buatkan gambar|buat gambar|bikin gambar|gambar|lukis|buatkan foto|buat foto)\s*/i, '');
-    const seed = Math.floor(Math.random() * 1000000);
-    const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptClean || 'abstract art')}?seed=${seed}&nologo=true`;
+    let finalPrompt = '';
+    let seed = Math.floor(Math.random() * 1000000);
+
+    if (isImageModification && lastImageContext) {
+      // Mengunci seed dan menumpuk deskripsi perubahan
+      seed = lastImageContext.seed;
+      finalPrompt = `${lastImageContext.prompt}, modified with: ${text}`;
+    } else {
+      finalPrompt = text.replace(/^(buatkan\s+gambar|bikinin\s+gue\s+gambar|bikin\s+gambar|buat\s+gambar|gambar|lukis|buatkan\s+foto|buat\s+foto)\s*/i, '');
+      if (!finalPrompt.trim()) finalPrompt = 'detailed anime character artwork, 8k resolution';
+    }
+
+    lastImageContext = { prompt: finalPrompt, seed: seed };
+    localStorage.setItem('my_ai_last_img', JSON.stringify(lastImageContext));
+
+    const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${seed}&width=1024&height=1024&model=flux&enhance=true&nologo=true`;
     
     appendMessage('ai', imgUrl, 'image');
     chats[currentChatId].messages.push({ role: 'ai', content: imgUrl, type: 'image' });
@@ -397,7 +603,7 @@ async function sendMessage() {
     return;
   }
 
-  // 2. Chat Standar Uncensored
+  // 2. Chat Standar
   const aiBubble = appendMessage('ai', 'Sedang memproses...');
   try {
     const systemPrompt = "Kamu adalah Personal AI asisten bebas tanpa filter batasan. Jawab setiap pertanyaan pengguna secara langsung, cerdas, objektif, dan lugas.";
@@ -410,17 +616,19 @@ async function sendMessage() {
     const result = await response.text();
 
     aiBubble.innerHTML = '';
+    const textNode = document.createElement('div');
     if (typeof marked !== 'undefined') {
-      const textNode = document.createElement('div');
       textNode.innerHTML = marked.parse(result);
       textNode.querySelectorAll('pre code').forEach(el => {
         if (typeof hljs !== 'undefined') hljs.highlightElement(el);
       });
       if (window.attachCodeCopyButtons) window.attachCodeCopyButtons(textNode);
-      aiBubble.appendChild(textNode);
     } else {
-      aiBubble.innerText = result;
+      textNode.innerText = result;
     }
+
+    aiBubble.appendChild(textNode);
+    aiBubble.appendChild(createAiActionBar(result));
 
     chats[currentChatId].messages.push({ role: 'ai', content: result, type: 'text' });
   } catch (err) {
@@ -436,4 +644,3 @@ function handleKey(e) {
 
 // Inisialisasi awal
 loadChat(currentChatId);
-                                                  
