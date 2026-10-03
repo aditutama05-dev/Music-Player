@@ -19,8 +19,10 @@ Dokumen ini berfungsi sebagai rekam jejak spesifikasi fitur proyek. Setiap pemba
   * Navigasi Mode (`💬 Chat Bebas`, `🤖 AI Agent`, `🎨 Buat Gambar`).
   * Daftar riwayat percakapan interaktif (`active-chat`).
   * Tombol akses cepat pengaturan token GitHub.
-* **Input Bar:**
-  * Tombol bulat `＋` di sisi kiri untuk lampiran/menu alat mendatang.
+* **Input Bar & Lampiran File:**
+  * Tombol bulat `＋` di sisi kiri yang terhubung langsung ke dialog pemilihan file/gambar perangkat (`#file-uploader`).
+  * Bar pratinjau lampiran (`#attachment-preview-bar`) tepat di atas input teks dengan pill nama file dan tombol hapus (`✕`).
+  * Dukungan render pratinjau badge file/gambar yang dikirim pengguna di dalam bubble percakapan.
   * Input bar responsif dengan pemicu `Enter` atau tombol `Kirim`.
 * **Markdown & Code Engine:**
   * Integrasi pustaka `Marked.js` untuk parsing Markdown lengkap (tabel, list, formatting).
@@ -35,11 +37,15 @@ Dokumen ini berfungsi sebagai rekam jejak spesifikasi fitur proyek. Setiap pemba
 * Integrasi teks melalui Pollinations AI API.
 * Prompt sistem objektif, lugas, dan bebas batasan filter.
 * Riwayat chat tersimpan lokal di perangkat (`localStorage`).
+* Menyertakan konteks metadata nama berkas jika pengguna melampirkan file pada pesan chat.
 
-### B. Mode Buat Gambar (Image Studio)
-* Integrasi generasi visual otomatis via Pollinations Image API.
-* Fitur auto-detect: Jika pengguna mengetik perintah berawalan *"gambar"*, *"buatkan gambar"*, atau *"lukis"*, sistem langsung mengeksekusi gambar visual tanpa harus berada di mode Buat Gambar.
-* Render gambar responsif langsung di dalam gelembung percakapan.
+### B. Mode Buat Gambar & Generator Chat Langsung
+* Integrasi generasi visual otomatis via Pollinations Image API (`image.pollinations.ai`).
+* **Multi-Keyword Natural Trigger:** Mengetik di obrolan umum dengan awalan kata seperti *"buat gambar"*, *"buatkan gambar"*, *"bikin gambar"*, *"gambar"*, *"lukis"*, *"buat foto"*, atau *"buatkan foto"* otomatis langsung mengeksekusi pembuatan gambar tanpa harus berpindah mode.
+* **Image Action Tools:** Setiap gambar yang dirender dilengkapi 3 tombol aksi:
+  * 📥 **Unduh:** Mengunduh berkas gambar langsung ke penyimpanan HP (format JPG).
+  * 📋 **Salin:** Menyalin URL/tautan gambar langsung ke clipboard perangkat.
+  * 🔗 **Bagikan:** Membuka menu share bawaan sistem Android (Web Share API) untuk membagikan gambar langsung ke aplikasi lain.
 
 ### C. Mode AI Agent (Codex GitHub)
 * **Autentikasi Lokal:** Input GitHub Personal Access Token (PAT) disimpan aman di `localStorage` tanpa terekspos ke backend publik.
@@ -53,5 +59,6 @@ Dokumen ini berfungsi sebagai rekam jejak spesifikasi fitur proyek. Setiap pemba
 ---
 
 ## 4. Aturan Pemeliharaan (Maintenance Rule)
-* Pengeditan file tidak boleh menghilangkan integrasi `copy-helper.js` atau parsing Markdown.
-* Perubahan versi Service Worker (`CACHE_NAME`) wajib diperbarui setiap kali ada perubahan file inti.
+* Pengeditan file tidak boleh menghilangkan integrasi `copy-helper.js`, parsing Markdown, tombol aksi gambar, atau pengelolaan attachment.
+* Perubahan versi Service Worker (`CACHE_NAME`) wajib dinaikkan setiap kali ada perubahan file inti agar browser pengguna segera memperbarui cache.
+* 
