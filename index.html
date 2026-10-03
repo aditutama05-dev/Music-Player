@@ -114,6 +114,37 @@
     </div>
   </div>
 
+  <!-- Bottom Sheet Opsi Riwayat Percakapan (Ala Gemini) -->
+  <div id="chat-options-sheet" class="bottom-sheet-backdrop" style="display: none;" onclick="closeChatOptions()">
+    <div class="bottom-sheet-content" onclick="event.stopPropagation()">
+      <div class="sheet-drag-handle"></div>
+      <div class="sheet-action-item" onclick="handlePinChat()">
+        <span class="sheet-action-icon">📌</span>
+        <span id="sheet-pin-label">Sematkan</span>
+      </div>
+      <div class="sheet-action-item" onclick="handleRenameChat()">
+        <span class="sheet-action-icon">✏️</span>
+        <span>Ganti nama</span>
+      </div>
+      <div class="sheet-action-item text-danger" onclick="handleDeleteChat()">
+        <span class="sheet-action-icon">🗑️</span>
+        <span>Hapus</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Ekspor Dokumen Respon AI -->
+  <div id="export-modal" class="bottom-sheet-backdrop" style="display: none;" onclick="closeExportModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h3>Ekspor Percakapan</h3>
+      <p style="font-size: 13px; color: #8e918f; margin-bottom: 14px;">Pilih format untuk mengekspor teks respon ini ke file lokal.</p>
+      <div class="modal-actions" style="justify-content: stretch; gap: 8px;">
+        <button class="btn-cancel" style="flex: 1;" onclick="exportCurrentResponse('txt')">Unduh TXT</button>
+        <button class="btn-save" style="flex: 1;" onclick="exportCurrentResponse('doc')">Unduh DOC</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="pwa-register.js"></script>
   <script src="copy-helper.js"></script>
