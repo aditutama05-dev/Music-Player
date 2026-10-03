@@ -242,6 +242,85 @@ body {
   border: 1px solid #333;
 }
 
+/* Tombol Aksi Gambar (Unduh, Salin, Berbagi) */
+.image-bubble-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.image-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.btn-img-action {
+  background: #282a2c;
+  color: #c4c7c5;
+  border: 1px solid #3c4043;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.btn-img-action:hover {
+  background: #37393b;
+  color: #ffffff;
+}
+
+/* Area Pratinjau Lampiran di Atas Input Bar */
+#attachment-preview-bar {
+  padding: 8px 16px 0;
+  background: #131314;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preview-item {
+  background: #1e1f20;
+  border: 1px solid #3c4043;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12.5px;
+  color: #a8c7fa;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 80%;
+}
+
+.preview-item span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-remove-attachment {
+  background: transparent;
+  border: none;
+  color: #8e918f;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+}
+
+.btn-remove-attachment:hover {
+  color: #ffb4ab;
+}
+
 /* Input Bar Chat */
 .input-bar {
   padding: 12px 16px;
@@ -426,7 +505,7 @@ body {
   font-size: 14px;
   line-height: 1.6;
   color: #c4c7c5;
-  }
+}
 
 /* Modal Settings */
 #settings-modal {
@@ -490,4 +569,5 @@ body {
 .btn-save {
   background: #a8c7fa;
   color: #040e1e;
-}
+  }
+  
