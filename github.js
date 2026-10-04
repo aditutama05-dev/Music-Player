@@ -17,7 +17,7 @@ const GitHubAgent = {
     const res = await fetch(`https://api.github.com${endpoint}`, {
       ...options,
       headers: {
-        'Authorization': `token ${token}`,
+        'Authorization': `Bearer ${token}`,
         'Accept': 'application/vnd.github.v3+json',
         'Content-Type': 'application/json',
         ...(options.headers || {})
@@ -36,10 +36,16 @@ const GitHubAgent = {
     return this.request('/user/repos?sort=updated&per_page=15');
   },
 
-  // Membaca isi file di repo
+  // Membaca isi file di repo dengan decode aman UTF-8
   async getFileContent(owner, repo, path, branch = 'main') {
     const data = await this.request(`/repos/${owner}/${repo}/contents/${path}?ref=${branch}`);
-    const decoded = atob(data.content.replace(/\s/g, ''));
+    const binary = atob(data.content.replace(/\s/g, ''));
+    let decoded = binary;
+    try {
+      decoded = decodeURIComponent(escape(binary));
+    } catch (e) {
+      decoded = binary;
+    }
     return { sha: data.sha, content: decoded };
   },
 
@@ -60,3 +66,4 @@ const GitHubAgent = {
 };
 
 window.GitHubAgent = GitHubAgent;
+  
