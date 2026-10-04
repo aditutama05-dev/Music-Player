@@ -15,7 +15,7 @@ body {
   overflow: hidden;
 }
 
-/* Sidebar Drawer */
+/* Sidebar Drawer Alicia */
 #sidebar {
   width: 280px;
   background: #1e1f20;
@@ -40,24 +40,26 @@ body {
 
 .btn-new {
   width: 100%;
-  padding: 12px 14px;
+  padding: 12px 16px;
   background: #282a2c;
   border: 1px solid #3c4043;
-  border-radius: 8px;
-  color: #e3e3e3;
+  border-radius: 24px;
+  color: #ffffff;
   font-weight: 600;
+  font-size: 14.5px;
   cursor: pointer;
   text-align: left;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  transition: background 0.2s;
 }
 
 .btn-new:hover {
   background: #37393b;
 }
 
-/* Navigasi Mode */
+/* Navigasi Menu Alicia (Avatar, AI Agent, Video, Koleksi) */
 .nav-modes {
   padding: 12px 16px;
   border-bottom: 1px solid #282a2c;
@@ -67,30 +69,42 @@ body {
 }
 
 .mode-item {
-  padding: 10px 12px;
-  border-radius: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  color: #c4c7c5;
+  gap: 12px;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: #ffffff;
+  transition: background 0.15s;
+}
+
+.mode-item:hover {
+  background: #282a2c;
 }
 
 .mode-item.active {
   background: #004a77;
   color: #c2e7ff;
-  font-weight: 500;
 }
 
-/* Riwayat Percakapan */
+.mode-icon {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Riwayat Percakapan Kontras Tinggi */
 .history-label {
-  padding: 12px 16px 4px;
+  padding: 14px 16px 6px;
   font-size: 12px;
   font-weight: bold;
-  color: #8e918f;
+  color: #a8c7fa;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
 }
 
 .history-list {
@@ -104,8 +118,8 @@ body {
   align-items: center;
   justify-content: space-between;
   border-radius: 8px;
-  padding: 2px 4px 2px 10px;
-  margin-bottom: 3px;
+  padding: 4px 6px 4px 12px;
+  margin-bottom: 4px;
   cursor: pointer;
   transition: background 0.15s ease;
 }
@@ -120,16 +134,16 @@ body {
 
 .history-item-container.active-chat .history-title {
   color: #a8c7fa;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .history-title {
   flex: 1;
-  font-size: 13.5px;
+  font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #c4c7c5;
+  color: #e3e3e3;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -138,7 +152,6 @@ body {
 .btn-chat-more {
   background: transparent;
   border: none;
-  color: #8e918f;
   font-size: 16px;
   cursor: pointer;
   padding: 6px 8px;
@@ -146,36 +159,14 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 6px;
+  transition: background 0.15s;
 }
 
 .btn-chat-more:hover {
-  color: #ffffff;
   background: #37393b;
 }
 
-.sidebar-footer {
-  padding: 12px 16px;
-  border-top: 1px solid #282a2c;
-}
-
-.btn-settings {
-  width: 100%;
-  padding: 10px;
-  background: transparent;
-  border: 1px solid #3c4043;
-  border-radius: 8px;
-  color: #c4c7c5;
-  cursor: pointer;
-  font-size: 13px;
-  text-align: center;
-}
-
-.btn-settings:hover {
-  background: #282a2c;
-  color: #ffffff;
-}
-
-/* Main View Panel Router */
+/* Main View Panel */
 #main {
   flex: 1;
   display: flex;
@@ -200,15 +191,15 @@ body {
 .menu-btn {
   background: none;
   border: none;
-  color: #e3e3e3;
-  font-size: 22px;
+  color: #ffffff;
+  font-size: 24px;
   cursor: pointer;
 }
 
 .title-area {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
-  color: #e3e3e3;
+  color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -222,23 +213,24 @@ body {
   overflow: hidden;
 }
 
-/* Mode Chat Standard */
+/* Gelembung Pesan Obrolan (Mempertahankan Baris & Paragraf) */
 .chat-container {
   flex: 1;
   overflow-y: auto;
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .message {
-  max-width: 88%;
-  padding: 12px 16px;
-  border-radius: 12px;
-  line-height: 1.5;
-  font-size: 14.5px;
+  max-width: 90%;
+  padding: 14px 18px;
+  border-radius: 16px;
+  line-height: 1.6;
+  font-size: 15px;
   word-break: break-word;
+  white-space: pre-wrap; /* Kunci agar jarak enter/paragraf tidak hilang */
 }
 
 .message.user {
@@ -251,7 +243,7 @@ body {
 .message.ai {
   align-self: flex-start;
   background: #1e1f20;
-  color: #e3e3e3;
+  color: #f1f1f1;
   border: 1px solid #333538;
   border-bottom-left-radius: 4px;
 }
@@ -259,7 +251,7 @@ body {
 .message img {
   max-width: 100%;
   border-radius: 12px;
-  margin-top: 4px;
+  margin-top: 6px;
   display: block;
 }
 
@@ -267,29 +259,29 @@ body {
   position: relative;
   background: #000000;
   padding: 12px;
-  border-radius: 6px;
+  border-radius: 8px;
   overflow-x: auto;
   margin: 10px 0;
   font-family: monospace;
-  font-size: 13px;
+  font-size: 13.5px;
   border: 1px solid #333;
-}
-
-/* Action Bar Respon Teks AI (Ala Gemini) */
+  white-space: pre;
+  }
+  /* Action Bar Respon Teks AI (Ala Gemini - Kontras Tinggi) */
 .ai-response-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 10px;
-  padding-top: 6px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .btn-ai-action {
   background: transparent;
   border: none;
-  color: #8e918f;
-  padding: 6px;
+  color: #ffffff; /* Putih cerah, kontras tinggi ramah low vision */
+  padding: 8px;
   border-radius: 50%;
   cursor: pointer;
   display: inline-flex;
@@ -299,16 +291,20 @@ body {
 }
 
 .btn-ai-action:hover {
-  background: #282a2c;
-  color: #e3e3e3;
+  background: #37393b;
+}
+
+/* Tombol Speaker dipisah ke pojok paling kanan agar tidak terhimpit */
+.btn-ai-speaker {
+  margin-left: auto;
 }
 
 .btn-ai-action.speaking {
   color: #a8c7fa;
-  background: rgba(168, 199, 250, 0.15);
+  background: rgba(168, 199, 250, 0.2);
 }
 
-/* Tombol Aksi Gambar Minimalis (Pill Ala Gemini) */
+/* Tombol Aksi Gambar & Video Minimalis (Pill Ala Gemini) */
 .image-bubble-container {
   display: flex;
   flex-direction: column;
@@ -324,10 +320,10 @@ body {
 
 .btn-img-action {
   background: #282a2c;
-  color: #e3e3e3;
-  border: none;
+  color: #ffffff;
+  border: 1px solid #3c4043;
   border-radius: 20px;
-  padding: 8px 14px;
+  padding: 8px 16px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -339,14 +335,19 @@ body {
   background: #37393b;
 }
 
-.btn-img-action svg {
-  display: block;
+/* Area Wadah Input Chat Ala Gemini (Responsif & Multi-line) */
+.input-container-wrapper {
+  background: #131314;
+  border-top: 1px solid #282a2c;
+  padding: 10px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
-/* Area Pratinjau Lampiran di Atas Input Bar */
+/* Pratinjau Lampiran Gambar / Berkas di Dalam Input Bar */
 #attachment-preview-bar {
-  padding: 8px 16px 0;
-  background: #131314;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -355,14 +356,21 @@ body {
 .preview-item {
   background: #1e1f20;
   border: 1px solid #3c4043;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 6px 12px;
-  font-size: 12.5px;
+  font-size: 13px;
   color: #a8c7fa;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  max-width: 80%;
+  gap: 10px;
+  max-width: 90%;
+}
+
+.preview-item img {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 6px;
 }
 
 .preview-item span {
@@ -374,78 +382,90 @@ body {
 .btn-remove-attachment {
   background: transparent;
   border: none;
-  color: #8e918f;
-  font-size: 14px;
+  color: #ffb4ab;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
-  line-height: 1;
+  padding: 2px;
 }
 
-.btn-remove-attachment:hover {
-  color: #ffb4ab;
-}
-
-/* Input Bar Chat */
+/* Input Bar Fleksibel (Textarea) */
 .input-bar {
-  padding: 12px 16px;
   display: flex;
   gap: 10px;
-  background: #131314;
-  border-top: 1px solid #282a2c;
-  align-items: center;
-  flex-shrink: 0;
+  align-items: flex-end; /* Mengikuti pertumbuhan tinggi textarea */
+  background: #1e1f20;
+  border: 1px solid #3c4043;
+  border-radius: 28px;
+  padding: 6px 10px 6px 12px;
+  transition: border-color 0.2s;
+}
+
+.input-bar:focus-within {
+  border-color: #a8c7fa;
 }
 
 .btn-add {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  border: 1px solid #3c4043;
-  background: #1e1f20;
-  color: #c4c7c5;
-  font-size: 20px;
+  border: none;
+  background: transparent;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
+  margin-bottom: 2px;
 }
 
 .btn-add:hover {
   background: #2b2c2f;
-  color: #ffffff;
 }
 
-.input-bar input {
+/* Textarea Fleksibel Naik ke Atas */
+.input-bar textarea {
   flex: 1;
-  padding: 12px 18px;
-  border-radius: 24px;
-  border: 1px solid #3c4043;
-  background: #1e1f20;
+  padding: 10px 6px;
+  border: none;
+  background: transparent;
   color: #ffffff;
   outline: none;
-  font-size: 14.5px;
+  font-size: 15px;
+  line-height: 1.5;
+  resize: none;
+  max-height: 140px; /* Batas maksimal scroll vertikal */
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
-.input-bar input:focus {
-  border-color: #a8c7fa;
-}
-
-.input-bar button.btn-send {
-  padding: 12px 20px;
-  border-radius: 24px;
+/* Tombol Kirim Bundar Ala Gemini (Ikon Panah Atas) */
+.btn-send {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   border: none;
   background: #a8c7fa;
   color: #040e1e;
-  font-weight: bold;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  margin-bottom: 2px;
+  transition: opacity 0.2s;
 }
 
-/* Antarmuka Mandiri AI Agent (Codex UI) */
+.btn-send:hover {
+  opacity: 0.9;
+}
+
+/* Antarmuka AI Agent Codex */
 .agent-container {
   flex: 1;
   overflow-y: auto;
@@ -461,8 +481,18 @@ body {
 .agent-headline {
   font-size: 19px;
   font-weight: 600;
-  color: #e3e3e3;
-  margin-bottom: 2px;
+  color: #ffffff;
+}
+
+.btn-settings-inline {
+  background: #282a2c;
+  color: #a8c7fa;
+  border: 1px solid #3c4043;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .agent-selector-bar {
@@ -477,7 +507,7 @@ body {
   gap: 6px;
   background: #1e1f20;
   border: 1px solid #3c4043;
-  padding: 6px 12px;
+  padding: 8px 12px;
   border-radius: 8px;
   flex: 1;
   min-width: 140px;
@@ -486,8 +516,8 @@ body {
 .selector-item select {
   background: transparent;
   border: none;
-  color: #e3e3e3;
-  font-size: 13.5px;
+  color: #ffffff;
+  font-size: 14px;
   outline: none;
   width: 100%;
   cursor: pointer;
@@ -495,7 +525,7 @@ body {
 
 .selector-item select option {
   background: #1e1f20;
-  color: #e3e3e3;
+  color: #ffffff;
 }
 
 .agent-input-card {
@@ -528,7 +558,7 @@ body {
 
 .agent-hint {
   font-size: 12px;
-  color: #8e918f;
+  color: #a8c7fa;
 }
 
 .btn-run-agent {
@@ -537,7 +567,7 @@ body {
   border: none;
   border-radius: 20px;
   padding: 8px 18px;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: bold;
   cursor: pointer;
 }
@@ -555,7 +585,7 @@ body {
   padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
-  color: #8e918f;
+  color: #c4c7c5;
 }
 
 .agent-tab.active {
@@ -571,7 +601,7 @@ body {
   min-height: 180px;
   font-size: 14px;
   line-height: 1.6;
-  color: #c4c7c5;
+  color: #e3e3e3;
 }
 
 /* Modal Settings & Backdrop */
@@ -638,14 +668,14 @@ body {
   color: #040e1e;
 }
 
-/* Bottom Sheet Ala Gemini (Opsi Riwayat & Ekspor) */
+/* Bottom Sheet Ala Gemini (Opsi Riwayat & Koleksi) */
 .bottom-sheet-backdrop {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 3000;
   display: flex;
   flex-direction: column;
@@ -684,7 +714,7 @@ body {
   padding: 14px 12px;
   border-radius: 10px;
   font-size: 15px;
-  color: #e3e3e3;
+  color: #ffffff;
   cursor: pointer;
 }
 
