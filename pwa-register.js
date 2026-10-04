@@ -1,12 +1,24 @@
-// Register Service Worker
+// Register Service Worker Alicia
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
       .then((reg) => {
-        console.log('PWA Service Worker terdaftar:', reg.scope);
+        console.log('Alicia Service Worker terdaftar:', reg.scope);
+
+        // Deteksi pembaruan Service Worker baru otomatis
+        reg.onupdatefound = () => {
+          const installingWorker = reg.installing;
+          if (installingWorker) {
+            installingWorker.onstatechange = () => {
+              if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('Pembaruan baru Alicia tersedia.');
+              }
+            };
+          }
+        };
       })
       .catch((err) => {
-        console.error('PWA Service Worker gagal:', err);
+        console.error('Alicia Service Worker gagal:', err);
       });
   });
 }
@@ -16,27 +28,33 @@ let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  
-  // Tampilkan notifikasi kecil di UI jika aplikasi belum diinstal
+
+  // Hindari penumpukan banner ganda
+  const existingBanner = document.getElementById('pwa-install-banner');
+  if (existingBanner) existingBanner.remove();
+
+  // Tampilkan tombol instalasi mengambang ramah aksesibilitas
   const installBanner = document.createElement('div');
   installBanner.id = 'pwa-install-banner';
   installBanner.style.cssText = `
     position: fixed;
-    bottom: 80px;
+    bottom: 85px;
     left: 50%;
     transform: translateX(-50%);
     background: #004a77;
-    color: #c2e7ff;
-    padding: 10px 18px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 500;
+    color: #ffffff;
+    border: 1px solid #3880ff;
+    padding: 10px 20px;
+    border-radius: 24px;
+    font-size: 13.5px;
+    font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    z-index: 999;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+    z-index: 9999;
+    white-space: nowrap;
   `;
-  installBanner.innerText = '📲 Pasang Aplikasi ke Layar Utama';
-  
+  installBanner.innerText = '📲 Pasang Alicia ke Layar Utama';
+
   installBanner.onclick = async () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
@@ -49,5 +67,13 @@ window.addEventListener('beforeinstallprompt', (e) => {
   };
 
   document.body.appendChild(installBanner);
+});
+
+// Bersihkan banner jika aplikasi sudah terpasang
+window.addEventListener('appinstalled', () => {
+  const existingBanner = document.getElementById('pwa-install-banner');
+  if (existingBanner) existingBanner.remove();
+  deferredPrompt = null;
+  console.log('Alicia berhasil dipasang ke Layar Utama.');
 });
                         
