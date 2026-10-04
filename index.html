@@ -13,18 +13,15 @@
 </head>
 <body>
 
-  <!-- Sidebar -->
+  <!-- Sidebar Bersih & Satu Pintu -->
   <div id="sidebar">
     <div class="sidebar-header">
       <button class="btn-new" onclick="startNewChat()">＋ Chat Baru</button>
     </div>
-    <div class="nav-modes">
-      <div class="mode-item active" id="mode-chat" onclick="setMode('chat')">💬 Chat Bebas</div>
-      <div class="mode-item" id="mode-agent" onclick="setMode('agent')">🤖 AI Agent</div>
-      <div class="mode-item" id="mode-image" onclick="setMode('image')">🎨 Buat Gambar</div>
-    </div>
-    <div class="history-label">Riwayat Chat</div>
+    
+    <div class="history-label">Riwayat Percakapan</div>
     <div class="history-list" id="chat-history"></div>
+    
     <div class="sidebar-footer">
       <button class="btn-settings" onclick="openSettings()">⚙ Pengaturan GitHub Token</button>
     </div>
@@ -34,10 +31,10 @@
   <div id="main">
     <div class="top-bar">
       <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-      <div class="title-area" id="current-mode-title">💬 Chat Bebas (Uncensored)</div>
+      <div class="title-area" id="current-mode-title">Personal AI Codex</div>
     </div>
 
-    <!-- Tampilan Mode Chat / Image Biasa -->
+    <!-- Tampilan Mode Obrolan Tunggal Universal -->
     <div id="chat-view" class="view-panel">
       <div class="chat-container" id="chat-box"></div>
 
@@ -53,12 +50,12 @@
         <!-- Input File Tersembunyi -->
         <input type="file" id="file-uploader" style="display: none;" onchange="handleFileSelected(event)">
         <button class="btn-add" onclick="triggerFileUpload()" title="Unggah File atau Gambar">＋</button>
-        <input type="text" id="user-input" placeholder="Ketik pesan atau instruksi..." onkeypress="handleKey(event)">
+        <input type="text" id="user-input" placeholder="Ketik pesan, 'buat gambar...', atau 'buat video...' " onkeypress="handleKey(event)">
         <button class="btn-send" onclick="sendMessage()">Kirim</button>
       </div>
     </div>
 
-    <!-- Tampilan Khusus AI Agent (Ala Codex Cloud) -->
+    <!-- Tampilan Khusus AI Agent (Tersimpan Siap Pakai) -->
     <div id="agent-view" class="view-panel" style="display: none;">
       <div class="agent-container">
         <h2 class="agent-headline">Apa yang sebaiknya kita kerjakan?</h2>
@@ -151,4 +148,5 @@
   <script src="github.js"></script>
   <script src="app.js"></script>
 </body>
-</html>
+  </html>
+  
