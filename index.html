@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Personal AI Codex</title>
+  <title>Alicia</title>
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
   <meta name="theme-color" content="#1e1f20">
@@ -13,52 +13,84 @@
 </head>
 <body>
 
-  <!-- Sidebar Bersih & Satu Pintu -->
+  <!-- Sidebar Terstruktur Alicia -->
   <div id="sidebar">
     <div class="sidebar-header">
-      <button class="btn-new" onclick="startNewChat()">＋ Chat Baru</button>
+      <button class="btn-new" onclick="startNewChat()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+        <span>Obrolan baru</span>
+      </button>
+    </div>
+
+    <!-- Navigasi Menu Alicia -->
+    <div class="nav-modes">
+      <div class="mode-item" id="nav-avatar" onclick="openAvatarStudio()">
+        <span class="mode-icon">👤</span>
+        <span>Avatar</span>
+      </div>
+      <div class="mode-item" id="nav-agent" onclick="setMode('agent')">
+        <span class="mode-icon">🤖</span>
+        <span>AI Agent</span>
+      </div>
+      <div class="mode-item" id="nav-video" onclick="openVideoStudio()">
+        <span class="mode-icon">🎬</span>
+        <span>Video</span>
+      </div>
+      <div class="mode-item" id="nav-collection" onclick="openCollectionGallery()">
+        <span class="mode-icon">📁</span>
+        <span>Koleksi</span>
+      </div>
     </div>
     
-    <div class="history-label">Riwayat Percakapan</div>
+    <div class="history-label">Riwayat</div>
     <div class="history-list" id="chat-history"></div>
-    
-    <div class="sidebar-footer">
-      <button class="btn-settings" onclick="openSettings()">⚙ Pengaturan GitHub Token</button>
-    </div>
   </div>
 
   <!-- Main View -->
   <div id="main">
     <div class="top-bar">
       <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-      <div class="title-area" id="current-mode-title">Personal AI Codex</div>
+      <div class="title-area" id="current-mode-title">Alicia</div>
     </div>
 
-    <!-- Tampilan Mode Obrolan Tunggal Universal -->
+    <!-- Tampilan Mode Obrolan Utama Universal -->
     <div id="chat-view" class="view-panel">
       <div class="chat-container" id="chat-box"></div>
 
-      <!-- Area Pratinjau Lampiran File/Gambar -->
-      <div id="attachment-preview-bar" style="display: none;">
-        <div class="preview-item">
-          <span id="preview-filename">file.png</span>
-          <button class="btn-remove-attachment" onclick="removeAttachment()">✕</button>
+      <!-- Kotak Input Bar Ala Gemini -->
+      <div class="input-container-wrapper">
+        <!-- Area Pratinjau Thumbnail Lampiran Gambar / File -->
+        <div id="attachment-preview-bar" style="display: none;">
+          <div class="preview-item">
+            <img id="preview-image-thumb" src="" alt="Lampiran" style="display: none;">
+            <span id="preview-filename">file.png</span>
+            <button class="btn-remove-attachment" onclick="removeAttachment()">✕</button>
+          </div>
         </div>
-      </div>
 
-      <div class="input-bar">
-        <!-- Input File Tersembunyi -->
-        <input type="file" id="file-uploader" style="display: none;" onchange="handleFileSelected(event)">
-        <button class="btn-add" onclick="triggerFileUpload()" title="Unggah File atau Gambar">＋</button>
-        <input type="text" id="user-input" placeholder="Ketik pesan, 'buat gambar...', atau 'buat video...' " onkeypress="handleKey(event)">
-        <button class="btn-send" onclick="sendMessage()">Kirim</button>
+        <div class="input-bar">
+          <!-- Input File Tersembunyi -->
+          <input type="file" id="file-uploader" style="display: none;" accept="image/*,.txt,.pdf,.js,.json" onchange="handleFileSelected(event)">
+          <button class="btn-add" onclick="triggerFileUpload()" title="Unggah Foto atau Berkas">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          
+          <textarea id="user-input" placeholder="Tanya apa saja ke Alicia, 'buat gambar...', atau 'buat video...' " rows="1" oninput="autoGrowInput(this)" onkeydown="handleInputKey(event)"></textarea>
+          
+          <button class="btn-send" id="btn-send-msg" onclick="sendMessage()" title="Kirim">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- Tampilan Khusus AI Agent (Tersimpan Siap Pakai) -->
+    <!-- Tampilan Khusus AI Agent (Codex) -->
     <div id="agent-view" class="view-panel" style="display: none;">
       <div class="agent-container">
-        <h2 class="agent-headline">Apa yang sebaiknya kita kerjakan?</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2 class="agent-headline">Apa yang sebaiknya kita kerjakan?</h2>
+          <button class="btn-settings-inline" onclick="openSettings()" title="Pengaturan Token GitHub">⚙ Token GitHub</button>
+        </div>
         
         <!-- Bar Selector Environment & Repo -->
         <div class="agent-selector-bar">
@@ -80,7 +112,7 @@
         <div class="agent-input-card">
           <textarea id="agent-task-input" placeholder="Deskripsikan tugas (contoh: Analisa dan perbaiki error, tambahkan fungsi...)" rows="3"></textarea>
           <div class="agent-card-footer">
-            <span class="agent-hint">Token PAT aktif</span>
+            <span class="agent-hint">GitHub Agent Siap</span>
             <button class="btn-run-agent" onclick="runAgentTask()">Jalankan Tugas</button>
           </div>
         </div>
@@ -98,7 +130,7 @@
     </div>
   </div>
 
-  <!-- Settings Modal -->
+  <!-- Settings Modal (GitHub Token) -->
   <div id="settings-modal">
     <div class="modal-content">
       <h3>Pengaturan GitHub PAT</h3>
@@ -130,15 +162,14 @@
     </div>
   </div>
 
-  <!-- Modal Ekspor Dokumen Respon AI -->
-  <div id="export-modal" class="bottom-sheet-backdrop" style="display: none;" onclick="closeExportModal()">
-    <div class="modal-content" onclick="event.stopPropagation()">
-      <h3>Ekspor Percakapan</h3>
-      <p style="font-size: 13px; color: #8e918f; margin-bottom: 14px;">Pilih format untuk mengekspor teks respon ini ke file lokal.</p>
-      <div class="modal-actions" style="justify-content: stretch; gap: 8px;">
-        <button class="btn-cancel" style="flex: 1;" onclick="exportCurrentResponse('txt')">Unduh TXT</button>
-        <button class="btn-save" style="flex: 1;" onclick="exportCurrentResponse('doc')">Unduh DOC</button>
+  <!-- Modal Koleksi / Galeri Media -->
+  <div id="collection-modal" class="bottom-sheet-backdrop" style="display: none;" onclick="closeCollectionModal()">
+    <div class="modal-content" style="max-width: 500px; width: 92%; max-height: 80vh; overflow-y: auto;" onclick="event.stopPropagation()">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="margin: 0;">📁 Koleksi Media Alicia</h3>
+        <button class="btn-remove-attachment" onclick="closeCollectionModal()">✕</button>
       </div>
+      <div id="collection-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;"></div>
     </div>
   </div>
 
