@@ -1,7 +1,10 @@
 {
-  "name": "Personal AI Codex",
-  "short_name": "PersonalAI",
+  "id": "alicia-personal-ai",
+  "name": "Alicia",
+  "short_name": "Alicia",
+  "description": "Personal AI Assistant & Media Studio",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#131314",
   "theme_color": "#1e1f20",
@@ -11,13 +14,13 @@
       "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "./icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "maskable"
+      "purpose": "any"
     }
   ]
 }
