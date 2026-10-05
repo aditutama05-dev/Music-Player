@@ -9,14 +9,14 @@ Dokumen ini berfungsi sebagai rekam jejak spesifikasi fitur proyek. Setiap pemba
 * **Identitas AI:** Alicia.
 * **Hosting:** GitHub Pages.
 * **CI/CD:** GitHub Actions (`.github/workflows/build-release.yml`) untuk verifikasi integritas berkas, pembuatan fallback ikon, dan rilis zip otomatis.
-* **PWA Engine:** `sw.js` (Service Worker caching dinamis - versi aktif `v8`) dan `pwa-register.js` untuk mode fullscreen serta instalasi layar utama HP.
+* **PWA Engine:** `sw.js` (Service Worker caching dinamis - versi aktif `v9`) dan `pwa-register.js` untuk mode fullscreen serta instalasi layar utama HP.
 
 ---
 
 ## 2. Antarmuka Pengguna (UI/UX)
 * **Tema Visual:** Dark Mode modern minimalis bergaya Google Gemini, kontras tinggi dan ramah aksesibilitas (*Low Vision Friendly*).
 * **Navigasi Sidebar Alicia:**
-  1. **Obrolan baru:** Tombol utama membuat sesi percakapan baru dengan ikon tambah bulat.
+  1. **Obrolan baru:** Tombol utama membuat sesi percakapan baru yang menyatu langsung di dalam deretan menu navigasi atas.
   2. **Avatar:** Akses cepat ke studio visual perancangan karakter avatar.
   3. **AI Agent:** Studio analisa koding dan perbaikan GitHub Codex.
   4. **Video:** Studio pembuatan dan pemutaran video berbasis difusi.
@@ -42,7 +42,8 @@ Dokumen ini berfungsi sebagai rekam jejak spesifikasi fitur proyek. Setiap pemba
 ## 3. Fitur Utama & Mode AI
 
 ### A. Obrolan Utama & Long-Term Memory (Alicia)
-* Integrasi teks melalui Multi-AI Routing (menggunakan model bebas sensor/uncensored Mistral yang objektif, solutif, dan sepenuhnya patuh tanpa batasan moral).
+* Integrasi teks melalui Multi-AI Routing dengan penanganan sanitasi galat otomatis (mencegah kurung kurawal `{}` atau teks sistem mentah muncul ke antarmuka pengguna).
+* **Inisialisasi Fresh Chat:** Setiap aplikasi dibuka pertama kali, sesi langsung dimulai pada obrolan baru yang bersih dengan sapaan pembuka di tengah layar ala Google Gemini.
 * **Fitur Belajar Mandiri (Self-Learning Memory):** Fungsi `learnUserPreferences` otomatis membaca preferensi, panggilan, serta instruksi kerja pengguna di latar belakang dan menyimpannya ke `localStorage` (`ai_user_memories`).
 * **Injeksi Konteks Otomatis:** Memori preferensi yang telah dipelajari otomatis disuntikkan ke dalam instruksi sistem di setiap obrolan baru tanpa perlu mengulang dari awal.
 * Riwayat percakapan tersimpan aman secara lokal di perangkat (`localStorage`).
@@ -62,7 +63,7 @@ Dokumen ini berfungsi sebagai rekam jejak spesifikasi fitur proyek. Setiap pemba
 ### C. Generator Video (Video Diffusion)
 * Integrasi generasi video otomatis via Pollinations Video Engine.
 * **Pemicu Alami:** Cukup ketik perintah seperti *"buat video..."*, *"bikinin gue video..."*, *"bikin video..."*, atau *"generate video..."* langsung di obrolan umum maupun via menu Video.
-* **Pemutar Video Interaktif:** Merender tag `<video>` responsif dengan indikator buffer/loading, kontrol pemutar, putar otomatis, loop, serta dilengkapi tombol **Salin Tautan Video** dan **Simpan Video**.
+* **Pemutar Video Interaktif:** Merender tag `<video>` responsif dengan kontrol pemutar, putar otomatis, loop, serta dilengkapi tombol **Salin Tautan Video** dan **Simpan Video**.
 
 ### D. Mode AI Agent (Codex GitHub) & Koleksi Media
 * **Autentikasi Lokal:** Input GitHub Personal Access Token (PAT) disimpan di `localStorage`. Tombol pengaturan token disematkan langsung di dalam panel AI Agent.
