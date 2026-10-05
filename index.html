@@ -15,15 +15,18 @@
 
   <!-- Sidebar Terstruktur Alicia -->
   <div id="sidebar">
-    <div class="sidebar-header">
-      <button class="btn-new" onclick="startNewChat()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
-        <span>Obrolan baru</span>
-      </button>
+    <div style="padding: 16px 18px 8px; font-size: 19px; font-weight: 700; color: #ffffff; letter-spacing: 0.5px;">
+      Alicia
     </div>
 
-    <!-- Navigasi Menu Alicia -->
+    <!-- Navigasi Menu Alicia (Obrolan Baru Menyatu di Deretan Menu) -->
     <div class="nav-modes">
+      <div class="mode-item" id="nav-new-chat" onclick="startNewChat()">
+        <span class="mode-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+        </span>
+        <span>Obrolan baru</span>
+      </div>
       <div class="mode-item" id="nav-avatar" onclick="openAvatarStudio()">
         <span class="mode-icon">👤</span>
         <span>Avatar</span>
@@ -180,4 +183,4 @@
   <script src="app.js"></script>
 </body>
   </html>
-  
+          
