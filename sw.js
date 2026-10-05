@@ -1,4 +1,4 @@
-const CACHE_NAME = 'personal-ai-v8';
+const CACHE_NAME = 'personal-ai-v9';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -64,3 +64,4 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
+        
