@@ -9,7 +9,7 @@ Dokumen ini berfungsi sebagai rekam jejak spesifikasi fitur proyek. Setiap pemba
 * **Identitas AI:** Alicia.
 * **Hosting:** GitHub Pages.
 * **CI/CD:** GitHub Actions (`.github/workflows/build-release.yml`) untuk verifikasi integritas berkas, pembuatan fallback ikon, dan rilis zip otomatis.
-* **PWA Engine:** `sw.js` (Service Worker caching dinamis - versi aktif `v7`) dan `pwa-register.js` untuk mode fullscreen serta instalasi layar utama HP.
+* **PWA Engine:** `sw.js` (Service Worker caching dinamis - versi aktif `v8`) dan `pwa-register.js` untuk mode fullscreen serta instalasi layar utama HP.
 
 ---
 
@@ -26,7 +26,7 @@ Dokumen ini berfungsi sebagai rekam jejak spesifikasi fitur proyek. Setiap pemba
   * Wadah masukan teks berbasis `<textarea>` multi-baris yang otomatis meluas ke atas (*auto-grow*) tanpa menggeser teks ke samping.
   * Mempertahankan struktur baris baru, enter, dan paragraf (*white-space: pre-wrap*) saat menempel teks panjang dari catatan eksternal.
   * Kartu pratinjau thumbnail gambar/lampiran terintegrasi di dalam bar input sebelum pesan dikirim.
-  * Tombol kirim bulat dengan ikon panah ke atas yang kontras dan tegas.
+  * Tombol kirim bulat dengan latar gelap elegan (`#1e1f20`), outline abu-abu kontras (`#55585b`), dan ikon panah putih terang yang tegas.
 * **Action Bar Respon AI:**
   * 🔄 **Muat Ulang (Regenerate):** Mengirim ulang prompt terakhir untuk variasi jawaban baru.
   * 📋 **Salin:** Menyalin seluruh teks jawaban ke clipboard.
@@ -42,7 +42,7 @@ Dokumen ini berfungsi sebagai rekam jejak spesifikasi fitur proyek. Setiap pemba
 ## 3. Fitur Utama & Mode AI
 
 ### A. Obrolan Utama & Long-Term Memory (Alicia)
-* Integrasi teks melalui Pollinations AI API (uncensored, objektif, solutif, dan ramah).
+* Integrasi teks melalui Multi-AI Routing (menggunakan model bebas sensor/uncensored Mistral yang objektif, solutif, dan sepenuhnya patuh tanpa batasan moral).
 * **Fitur Belajar Mandiri (Self-Learning Memory):** Fungsi `learnUserPreferences` otomatis membaca preferensi, panggilan, serta instruksi kerja pengguna di latar belakang dan menyimpannya ke `localStorage` (`ai_user_memories`).
 * **Injeksi Konteks Otomatis:** Memori preferensi yang telah dipelajari otomatis disuntikkan ke dalam instruksi sistem di setiap obrolan baru tanpa perlu mengulang dari awal.
 * Riwayat percakapan tersimpan aman secara lokal di perangkat (`localStorage`).
@@ -50,7 +50,7 @@ Dokumen ini berfungsi sebagai rekam jejak spesifikasi fitur proyek. Setiap pemba
 ### B. Generator Visual Kontekstual & Bebas Watermark
 * Integrasi generasi visual otomatis via Pollinations Image API (`image.pollinations.ai`).
 * Resolusi tinggi `1024x1024`, model `flux`, peningkatan detail otomatis (`enhance=true`), serta bebas watermark (`nologo=true` & `private=true`).
-* **Multi-Keyword Natural Trigger:** Mengetik di obrolan umum dengan awalan seperti *"buat gambar"*, *"bikinin gue gambar"*, *"bikin gambar"*, *"gambar"*, *"lukis"*, *"buat foto"*, atau *"buatkan foto"* otomatis langsung merender gambar tanpa berpindah menu.
+* **Multi-Keyword Natural Trigger:** Mendeteksi kata kunci visual di mana pun posisi kata dalam kalimat (seperti *"gambar"*, *"lukis"*, *"foto"*, *"anime girl"*, dll.) tanpa terhambat batasan awalan kalimat.
 * **Contextual Revision & Seed Locking:**
   * Mendeteksi instruksi modifikasi (seperti *"ubah outfit"*, *"ganti baju"*, *"pakaikan jaket"*, dll.).
   * Mengunci nilai `seed` dan menumpuk konteks prompt terakhir sehingga karakter dan komposisi wajah tetap konsisten tanpa teracak ulang.
@@ -62,7 +62,7 @@ Dokumen ini berfungsi sebagai rekam jejak spesifikasi fitur proyek. Setiap pemba
 ### C. Generator Video (Video Diffusion)
 * Integrasi generasi video otomatis via Pollinations Video Engine.
 * **Pemicu Alami:** Cukup ketik perintah seperti *"buat video..."*, *"bikinin gue video..."*, *"bikin video..."*, atau *"generate video..."* langsung di obrolan umum maupun via menu Video.
-* **Pemutar Video Interaktif:** Merender tag `<video>` responsif dengan kontrol pemutar, putar otomatis, loop, serta dilengkapi tombol **Salin Tautan Video** dan **Simpan Video**.
+* **Pemutar Video Interaktif:** Merender tag `<video>` responsif dengan indikator buffer/loading, kontrol pemutar, putar otomatis, loop, serta dilengkapi tombol **Salin Tautan Video** dan **Simpan Video**.
 
 ### D. Mode AI Agent (Codex GitHub) & Koleksi Media
 * **Autentikasi Lokal:** Input GitHub Personal Access Token (PAT) disimpan di `localStorage`. Tombol pengaturan token disematkan langsung di dalam panel AI Agent.
@@ -74,3 +74,4 @@ Dokumen ini berfungsi sebagai rekam jejak spesifikasi fitur proyek. Setiap pemba
 ## 4. Aturan Pemeliharaan (Maintenance Rule)
 * Pengeditan file tidak boleh merusak fungsi parsing Markdown, Action Bar respon AI, tombol aksi media, atau penanganan attachment.
 * Perubahan versi Service Worker (`CACHE_NAME`) wajib dinaikkan setiap kali ada modifikasi berkas inti agar browser perangkat segera memperbarui cache.
+* 
