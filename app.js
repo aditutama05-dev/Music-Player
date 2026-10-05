@@ -304,8 +304,8 @@ function executeDeleteChat(id) {
       renderHistory();
     }
   }
-               }
-  // Action Bar Respon Teks AI Ala Gemini
+                                                       }
+// Action Bar Respon Teks AI Ala Gemini
 function createAiActionBar(responseText) {
   const bar = document.createElement('div');
   bar.className = 'ai-response-actions';
@@ -822,4 +822,4 @@ async function sendMessage() {
 // Inisialisasi awal saat aplikasi dibuka: selalu tampilkan obrolan baru bersih
 renderWelcomeScreen();
 renderHistory();
-    
+  
