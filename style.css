@@ -213,7 +213,7 @@ body {
   overflow: hidden;
 }
 
-/* Gelembung Pesan Obrolan (Mempertahankan Baris & Paragraf) */
+/* Gelembung Pesan Obrolan */
 .chat-container {
   flex: 1;
   overflow-y: auto;
@@ -230,7 +230,7 @@ body {
   line-height: 1.6;
   font-size: 15px;
   word-break: break-word;
-  white-space: pre-wrap; /* Kunci agar jarak enter/paragraf tidak hilang */
+  white-space: pre-wrap;
 }
 
 .message.user {
@@ -266,8 +266,8 @@ body {
   font-size: 13.5px;
   border: 1px solid #333;
   white-space: pre;
-  }
-  /* Action Bar Respon Teks AI (Ala Gemini - Kontras Tinggi) */
+}
+/* Action Bar Respon Teks AI (Ala Gemini - Kontras Tinggi) */
 .ai-response-actions {
   display: flex;
   align-items: center;
@@ -280,7 +280,7 @@ body {
 .btn-ai-action {
   background: transparent;
   border: none;
-  color: #ffffff; /* Putih cerah, kontras tinggi ramah low vision */
+  color: #ffffff;
   padding: 8px;
   border-radius: 50%;
   cursor: pointer;
@@ -294,7 +294,7 @@ body {
   background: #37393b;
 }
 
-/* Tombol Speaker dipisah ke pojok paling kanan agar tidak terhimpit */
+/* Tombol Speaker dipisah ke pojok paling kanan */
 .btn-ai-speaker {
   margin-left: auto;
 }
@@ -396,7 +396,7 @@ body {
 .input-bar {
   display: flex;
   gap: 10px;
-  align-items: flex-end; /* Mengikuti pertumbuhan tinggi textarea */
+  align-items: flex-end;
   background: #1e1f20;
   border: 1px solid #3c4043;
   border-radius: 28px;
@@ -412,8 +412,8 @@ body {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  border: none;
-  background: transparent;
+  border: 1px solid #3c4043;
+  background: #1e1f20;
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -421,10 +421,12 @@ body {
   cursor: pointer;
   flex-shrink: 0;
   margin-bottom: 2px;
+  transition: background 0.2s, border-color 0.2s;
 }
 
 .btn-add:hover {
   background: #2b2c2f;
+  border-color: #55585b;
 }
 
 /* Textarea Fleksibel Naik ke Atas */
@@ -438,31 +440,32 @@ body {
   font-size: 15px;
   line-height: 1.5;
   resize: none;
-  max-height: 140px; /* Batas maksimal scroll vertikal */
+  max-height: 140px;
   overflow-y: auto;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
-/* Tombol Kirim Bundar Ala Gemini (Ikon Panah Atas) */
+/* Tombol Kirim Kontras Tinggi Baru (Latar Hitam-Abu, Outline Abu-Abu, Panah Putih) */
 .btn-send {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: none;
-  background: #a8c7fa;
-  color: #040e1e;
+  border: 1px solid #55585b;
+  background: #1e1f20;
+  color: #ffffff;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   margin-bottom: 2px;
-  transition: opacity 0.2s;
+  transition: background 0.2s, border-color 0.2s;
 }
 
 .btn-send:hover {
-  opacity: 0.9;
+  background: #2b2c2f;
+  border-color: #a8c7fa;
 }
 
 /* Antarmuka AI Agent Codex */
