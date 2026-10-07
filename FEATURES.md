@@ -9,7 +9,7 @@ Dokumen ini berfungsi sebagai rekam jejak spesifikasi fitur proyek. Setiap pemba
 * **Identitas AI:** Alicia.
 * **Hosting:** GitHub Pages.
 * **CI/CD:** GitHub Actions (`.github/workflows/build-release.yml`) untuk verifikasi integritas berkas, pembuatan fallback ikon, dan rilis zip otomatis.
-* **PWA Engine:** `sw.js` (Service Worker caching dinamis - versi aktif `v9`) dan `pwa-register.js` untuk mode fullscreen serta instalasi layar utama HP.
+* **PWA Engine:** `sw.js` (Service Worker caching dinamis - versi aktif `v11`) dan `pwa-register.js` untuk mode fullscreen serta instalasi layar utama HP.
 
 ---
 
@@ -42,14 +42,15 @@ Dokumen ini berfungsi sebagai rekam jejak spesifikasi fitur proyek. Setiap pemba
 ## 3. Fitur Utama & Mode AI
 
 ### A. Obrolan Utama & Long-Term Memory (Alicia)
-* Integrasi teks melalui Multi-AI Routing dengan penanganan sanitasi galat otomatis (mencegah kurung kurawal `{}` atau teks sistem mentah muncul ke antarmuka pengguna).
-* **Inisialisasi Fresh Chat:** Setiap aplikasi dibuka pertama kali, sesi langsung dimulai pada obrolan baru yang bersih dengan sapaan pembuka di tengah layar ala Google Gemini.
+* **Arsitektur Multi-AI Provider Murni:** Menggunakan AI Gateway independen (`Puter.js`) untuk chat teks dan penalaran cerdas multi-model LLM tanpa sensor moral, terpisah dari engine media.
+* **Mekanisme Fallback Otomatis & Sanitasi:** Jika gateway utama mengalami gangguan, sistem langsung beralih ke jalur cadangan secara transparan. Respon disanitasi otomatis sehingga tidak ada galat sistem (seperti status 404) atau kurung kurawal `{}` yang tembus ke bubble chat.
+* **Inisialisasi Fresh Chat:** Setiap aplikasi dibuka pertama kali, sesi selalu dimulai pada obrolan baru yang bersih dengan layar sapaan pembuka di tengah layar ala Google Gemini.
 * **Fitur Belajar Mandiri (Self-Learning Memory):** Fungsi `learnUserPreferences` otomatis membaca preferensi, panggilan, serta instruksi kerja pengguna di latar belakang dan menyimpannya ke `localStorage` (`ai_user_memories`).
 * **Injeksi Konteks Otomatis:** Memori preferensi yang telah dipelajari otomatis disuntikkan ke dalam instruksi sistem di setiap obrolan baru tanpa perlu mengulang dari awal.
 * Riwayat percakapan tersimpan aman secara lokal di perangkat (`localStorage`).
 
 ### B. Generator Visual Kontekstual & Bebas Watermark
-* Integrasi generasi visual otomatis via Pollinations Image API (`image.pollinations.ai`).
+* Integrasi generasi visual otomatis via Flux Image Engine (`image.pollinations.ai`).
 * Resolusi tinggi `1024x1024`, model `flux`, peningkatan detail otomatis (`enhance=true`), serta bebas watermark (`nologo=true` & `private=true`).
 * **Multi-Keyword Natural Trigger:** Mendeteksi kata kunci visual di mana pun posisi kata dalam kalimat (seperti *"gambar"*, *"lukis"*, *"foto"*, *"anime girl"*, dll.) tanpa terhambat batasan awalan kalimat.
 * **Contextual Revision & Seed Locking:**
@@ -61,13 +62,13 @@ Dokumen ini berfungsi sebagai rekam jejak spesifikasi fitur proyek. Setiap pemba
     * 📥 **Simpan / Unduh:** Mengunduh file visual langsung ke memori perangkat.
 
 ### C. Generator Video (Video Diffusion)
-* Integrasi generasi video otomatis via Pollinations Video Engine.
+* Integrasi generasi video animasi via Motion Diffusion Engine terpisah.
 * **Pemicu Alami:** Cukup ketik perintah seperti *"buat video..."*, *"bikinin gue video..."*, *"bikin video..."*, atau *"generate video..."* langsung di obrolan umum maupun via menu Video.
 * **Pemutar Video Interaktif:** Merender tag `<video>` responsif dengan kontrol pemutar, putar otomatis, loop, serta dilengkapi tombol **Salin Tautan Video** dan **Simpan Video**.
 
 ### D. Mode AI Agent (Codex GitHub) & Koleksi Media
 * **Autentikasi Lokal:** Input GitHub Personal Access Token (PAT) disimpan di `localStorage`. Tombol pengaturan token disematkan langsung di dalam panel AI Agent.
-* **Antarmuka Codex Cloud:** Pemilihan repositori, pemilihan cabang (*branch*), instruksi perbaikan, serta panel hasil analisa (*Tugas*, *Diff*, *Log*).
+* **Antarmuka Codex Cloud:** Pemilihan repositori, pemilihan cabang (*branch*), instruksi perbaikan, serta panel hasil analisa (*Tugas*, *Diff*, *Log*) bertenaga Puter AI Codex.
 * **Modal Koleksi Media:** Menampilkan seluruh hasil gambar dan video yang pernah digenerate dalam format kisi (*grid*) yang rapi.
 
 ---
