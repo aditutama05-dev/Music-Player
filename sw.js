@@ -1,4 +1,4 @@
-const CACHE_NAME = 'personal-ai-v10';
+const CACHE_NAME = 'personal-ai-v11';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -44,7 +44,11 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
   // Abaikan request API luar agar respon selalu realtime
-  if (event.request.url.includes('pollinations.ai') || event.request.url.includes('api.github.com')) {
+  if (
+    event.request.url.includes('pollinations.ai') || 
+    event.request.url.includes('api.github.com') ||
+    event.request.url.includes('puter.com')
+  ) {
     return;
   }
 
@@ -64,4 +68,4 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
-                                 
+              
