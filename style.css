@@ -69,6 +69,8 @@ body {
 }
 
 .mode-item {
+  position: relative;
+  overflow: hidden;
   padding: 10px 14px;
   border-radius: 10px;
   cursor: pointer;
@@ -79,6 +81,7 @@ body {
   font-weight: 500;
   color: #ffffff;
   transition: background 0.15s;
+  user-select: none;
 }
 
 .mode-item:hover {
@@ -114,14 +117,17 @@ body {
 }
 
 .history-item-container {
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   border-radius: 8px;
-  padding: 4px 6px 4px 12px;
+  padding: 10px 12px;
   margin-bottom: 4px;
   cursor: pointer;
   transition: background 0.15s ease;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .history-item-container:hover {
@@ -149,21 +155,24 @@ body {
   gap: 6px;
 }
 
-.btn-chat-more {
-  background: transparent;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 6px 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  transition: background 0.15s;
+/* Animasi Waterdrop / Ripple Efek Sentuhan */
+@keyframes waterdrop-ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
 }
 
-.btn-chat-more:hover {
-  background: #37393b;
+.waterdrop-ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  background-color: rgba(168, 199, 250, 0.35);
+  animation: waterdrop-ripple 600ms cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
 }
 
 /* Main View Panel */
@@ -175,9 +184,8 @@ body {
   width: 100%;
   position: relative;
   background: #131314;
-}
-
-.top-bar {
+    }
+  .top-bar {
   height: 56px;
   display: flex;
   align-items: center;
@@ -203,6 +211,7 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex: 1;
 }
 
 .view-panel {
@@ -267,7 +276,8 @@ body {
   border: 1px solid #333;
   white-space: pre;
 }
-/* Action Bar Respon Teks AI (Ala Gemini - Kontras Tinggi) */
+
+/* Action Bar Respon Teks AI (Ala Gemini) */
 .ai-response-actions {
   display: flex;
   align-items: center;
@@ -294,7 +304,7 @@ body {
   background: #37393b;
 }
 
-/* Tombol Speaker dipisah ke pojok paling kanan */
+/* Tombol Speaker Terkunci di Pojok Kanan */
 .btn-ai-speaker {
   margin-left: auto;
 }
@@ -304,7 +314,7 @@ body {
   background: rgba(168, 199, 250, 0.2);
 }
 
-/* Tombol Aksi Gambar & Video Minimalis (Pill Ala Gemini) */
+/* Tombol Aksi Gambar & Video Minimalis */
 .image-bubble-container {
   display: flex;
   flex-direction: column;
@@ -333,9 +343,8 @@ body {
 
 .btn-img-action:hover {
   background: #37393b;
-}
-
-/* Area Wadah Input Chat Ala Gemini (Responsif & Multi-line) */
+  }
+/* Area Wadah Input Chat Ala Gemini */
 .input-container-wrapper {
   background: #131314;
   border-top: 1px solid #282a2c;
@@ -346,7 +355,7 @@ body {
   flex-shrink: 0;
 }
 
-/* Pratinjau Lampiran Gambar / Berkas di Dalam Input Bar */
+/* Pratinjau Lampiran Gambar / Berkas */
 #attachment-preview-bar {
   display: flex;
   align-items: center;
@@ -392,7 +401,7 @@ body {
   padding: 2px;
 }
 
-/* Input Bar Fleksibel (Textarea) */
+/* Input Bar Fleksibel */
 .input-bar {
   display: flex;
   gap: 10px;
@@ -429,7 +438,6 @@ body {
   border-color: #55585b;
 }
 
-/* Textarea Fleksibel Naik ke Atas */
 .input-bar textarea {
   flex: 1;
   padding: 10px 6px;
@@ -446,7 +454,6 @@ body {
   word-break: break-word;
 }
 
-/* Tombol Kirim Kontras Tinggi Baru (Latar Hitam-Abu, Outline Abu-Abu, Panah Putih) */
 .btn-send {
   width: 40px;
   height: 40px;
@@ -671,7 +678,7 @@ body {
   color: #040e1e;
 }
 
-/* Bottom Sheet Ala Gemini (Opsi Riwayat & Koleksi) */
+/* Bottom Sheet Ala Gemini */
 .bottom-sheet-backdrop {
   position: fixed;
   top: 0;
