@@ -47,7 +47,8 @@ self.addEventListener('fetch', (event) => {
   if (
     event.request.url.includes('pollinations.ai') || 
     event.request.url.includes('api.github.com') ||
-    event.request.url.includes('puter.com')
+    event.request.url.includes('puter.com') ||
+    event.request.url.includes('openrouter.ai')
   ) {
     return;
   }
@@ -61,11 +62,5 @@ self.addEventListener('fetch', (event) => {
             cache.put(event.request, responseClone);
           });
         }
-        return networkResponse;
-      })
-      .catch(() => {
-        return caches.match(event.request);
-      })
-  );
-});
-              
+        return networkResponse
+    
