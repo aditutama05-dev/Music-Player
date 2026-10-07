@@ -56,6 +56,7 @@
     <div class="top-bar">
       <button class="menu-btn" onclick="toggleSidebar()">☰</button>
       <div class="title-area" id="current-mode-title">Alicia</div>
+      <button class="menu-btn" onclick="openSettings()" title="Pengaturan API" style="font-size: 18px;">⚙</button>
     </div>
 
     <!-- Tampilan Mode Obrolan Utama Universal -->
@@ -94,7 +95,7 @@
       <div class="agent-container">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <h2 class="agent-headline">Apa yang sebaiknya kita kerjakan?</h2>
-          <button class="btn-settings-inline" onclick="openSettings()" title="Pengaturan Token GitHub">⚙ Token GitHub</button>
+          <button class="btn-settings-inline" onclick="openSettings()" title="Pengaturan Token">⚙ Pengaturan API</button>
         </div>
         
         <!-- Bar Selector Environment & Repo -->
@@ -135,12 +136,18 @@
     </div>
   </div>
 
-  <!-- Settings Modal (GitHub Token) -->
+  <!-- Settings Modal (OpenRouter & GitHub Token) -->
   <div id="settings-modal">
-    <div class="modal-content">
-      <h3>Pengaturan GitHub PAT</h3>
-      <p style="font-size: 12px; color: #8e918f; margin-bottom: 8px;">Token disimpan lokal di perangkat untuk akses repositori GitHub.</p>
-      <input type="password" id="gh-token-input" placeholder="ghp_xxxxxx...">
+    <div class="modal-content" style="max-width: 420px;">
+      <h3 style="margin-top: 0; margin-bottom: 8px;">⚙ Pengaturan Akses AI</h3>
+      <p style="font-size: 12px; color: #8e918f; margin-bottom: 14px;">Semua kunci disimpan secara lokal di memori HP Anda (aman & tidak dikirim ke repositori publik).</p>
+      
+      <label style="font-size: 13px; font-weight: 600; color: #a8c7fa; display: block; margin-bottom: 4px;">OpenRouter API Key (Multi-AI)</label>
+      <input type="password" id="openrouter-token-input" placeholder="sk-or-v1-xxxx..." style="margin-bottom: 12px; width: 100%; box-sizing: border-box;">
+
+      <label style="font-size: 13px; font-weight: 600; color: #a8c7fa; display: block; margin-bottom: 4px;">GitHub PAT (Codex Agent)</label>
+      <input type="password" id="gh-token-input" placeholder="ghp_xxxx..." style="margin-bottom: 16px; width: 100%; box-sizing: border-box;">
+
       <div class="modal-actions">
         <button class="btn-cancel" onclick="closeSettings()">Batal</button>
         <button class="btn-save" onclick="saveSettings()">Simpan</button>
@@ -184,5 +191,4 @@
   <script src="github.js"></script>
   <script src="app.js"></script>
 </body>
-      </html>
-      
+</html>
