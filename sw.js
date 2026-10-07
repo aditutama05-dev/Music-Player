@@ -1,4 +1,4 @@
-const CACHE_NAME = 'personal-ai-v11';
+const CACHE_NAME = 'personal-ai-v12';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -45,7 +45,6 @@ self.addEventListener('fetch', (event) => {
 
   // Abaikan request API luar agar respon selalu realtime
   if (
-    event.request.url.includes('pollinations.ai') || 
     event.request.url.includes('api.github.com') ||
     event.request.url.includes('puter.com') ||
     event.request.url.includes('openrouter.ai')
@@ -62,5 +61,11 @@ self.addEventListener('fetch', (event) => {
             cache.put(event.request, responseClone);
           });
         }
-        return networkResponse
+        return networkResponse;
+      })
+      .catch(() => {
+        return caches.match(event.request);
+      })
+  );
+});
     
