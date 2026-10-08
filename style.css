@@ -118,11 +118,10 @@ body {
 
 .history-item-container {
   position: relative;
-  overflow: hidden;
   display: flex;
   align-items: center;
   border-radius: 8px;
-  padding: 10px 12px;
+  padding: 8px 10px 8px 12px;
   margin-bottom: 4px;
   cursor: pointer;
   transition: background 0.15s ease;
@@ -155,6 +154,26 @@ body {
   gap: 6px;
 }
 
+.btn-chat-more {
+  background: transparent;
+  border: none;
+  color: #8e918f;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.btn-chat-more:hover {
+  color: #ffffff;
+  background: #37393b;
+}
+
 /* Animasi Waterdrop / Ripple Efek Sentuhan */
 @keyframes waterdrop-ripple {
   0% {
@@ -175,7 +194,61 @@ body {
   animation: waterdrop-ripple 600ms cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
 }
 
-/* Main View Panel */
+/* Floating Dropdown Context Menu Ala ChatGPT */
+.chat-dropdown-popover {
+  position: fixed;
+  background: #212124;
+  border: 1px solid #3c4043;
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65);
+  z-index: 3500;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 170px;
+  animation: fadeInDropdown 0.15s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@keyframes fadeInDropdown {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.dropdown-action-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #e3e3e3;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+
+.dropdown-action-item:hover, .dropdown-action-item:active {
+  background: #2f3033;
+}
+
+.dropdown-action-item.text-danger {
+  color: #ffb4ab;
+}
+
+.dropdown-action-item.text-danger:hover {
+  background: rgba(255, 180, 171, 0.12);
+}
+
+.dropdown-action-icon {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  }
+  /* Main View Panel */
 #main {
   flex: 1;
   display: flex;
@@ -184,8 +257,9 @@ body {
   width: 100%;
   position: relative;
   background: #131314;
-    }
-  .top-bar {
+}
+
+.top-bar {
   height: 56px;
   display: flex;
   align-items: center;
@@ -230,6 +304,13 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.message-thread-node {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 6px;
 }
 
 .message {
@@ -277,20 +358,20 @@ body {
   white-space: pre;
 }
 
-/* Action Bar Respon Teks AI (Ala Gemini) */
+/* Action Bar Respon Teks AI (Terpisah di Luar Bubble) */
 .ai-response-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 12px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  width: 100%;
+  margin-top: 6px;
+  padding: 0 4px;
+  align-self: flex-start;
 }
 
 .btn-ai-action {
   background: transparent;
   border: none;
-  color: #ffffff;
+  color: #c4c7c5;
   padding: 8px;
   border-radius: 50%;
   cursor: pointer;
@@ -301,7 +382,8 @@ body {
 }
 
 .btn-ai-action:hover {
-  background: #37393b;
+  background: #282a2c;
+  color: #ffffff;
 }
 
 /* Tombol Speaker Terkunci di Pojok Kanan */
@@ -314,11 +396,11 @@ body {
   background: rgba(168, 199, 250, 0.2);
 }
 
-/* Tombol Aksi Gambar & Video Minimalis */
+/* Tombol Aksi Gambar & Video Minimalis (Ikon Murni) */
 .image-bubble-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .image-actions {
@@ -332,18 +414,26 @@ body {
   background: #282a2c;
   color: #ffffff;
   border: 1px solid #3c4043;
-  border-radius: 20px;
-  padding: 8px 16px;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, border-color 0.2s, transform 0.1s;
+  padding: 0;
+  flex-shrink: 0;
 }
 
 .btn-img-action:hover {
   background: #37393b;
-  }
+  border-color: #a8c7fa;
+}
+
+.btn-img-action:active {
+  transform: scale(0.94);
+}
 /* Area Wadah Input Chat Ala Gemini */
 .input-container-wrapper {
   background: #131314;
@@ -355,50 +445,55 @@ body {
   flex-shrink: 0;
 }
 
-/* Pratinjau Lampiran Gambar / Berkas */
+/* Pratinjau Multi-Lampiran Tanpa Nama File */
 #attachment-preview-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 2px 0 4px;
 }
 
 .preview-item {
+  position: relative;
   background: #1e1f20;
   border: 1px solid #3c4043;
   border-radius: 12px;
-  padding: 6px 12px;
-  font-size: 13px;
-  color: #a8c7fa;
+  padding: 4px;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  max-width: 90%;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
 }
 
 .preview-item img {
-  width: 32px;
-  height: 32px;
+  width: 50px;
+  height: 50px;
   object-fit: cover;
-  border-radius: 6px;
-}
-
-.preview-item span {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  border-radius: 8px;
+  display: block;
 }
 
 .btn-remove-attachment {
-  background: transparent;
-  border: none;
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #1e1f20;
+  border: 1px solid #ffb4ab;
   color: #ffb4ab;
-  font-size: 16px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 11px;
   font-weight: bold;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2px;
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 /* Input Bar Fleksibel */
@@ -676,70 +771,5 @@ body {
 .btn-save {
   background: #a8c7fa;
   color: #040e1e;
-}
-
-/* Bottom Sheet Ala Gemini */
-.bottom-sheet-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 3000;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.bottom-sheet-content {
-  background: #1e1f20;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  padding: 12px 16px 28px;
-  border-top: 1px solid #282a2c;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  animation: slideUpSheet 0.22s ease-out;
-}
-
-@keyframes slideUpSheet {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-
-.sheet-drag-handle {
-  width: 36px;
-  height: 4px;
-  background: #3c4043;
-  border-radius: 2px;
-  margin: 0 auto 12px;
-}
-
-.sheet-action-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 12px;
-  border-radius: 10px;
-  font-size: 15px;
-  color: #ffffff;
-  cursor: pointer;
-}
-
-.sheet-action-item:hover, .sheet-action-item:active {
-  background: #282a2c;
-}
-
-.sheet-action-icon {
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sheet-action-item.text-danger {
-  color: #ffb4ab;
-  }
+    }
   
