@@ -321,7 +321,6 @@ function openFloatingDropdown(chatId, anchorEl, clientX, clientY) {
   let top = clientY || (rect.bottom + 4);
   let left = clientX || (rect.left + 10);
 
-  // Batasi agar tidak offscreen
   if (top + popover.offsetHeight > window.innerHeight) {
     top = window.innerHeight - popover.offsetHeight - 12;
   }
@@ -356,8 +355,8 @@ function openFloatingDropdown(chatId, anchorEl, clientX, clientY) {
     closeFloatingDropdown();
     executeDeleteChat(chatId);
   };
-    }
-    // Render Riwayat Sidebar (Kunci 800ms Long-Press & Titik Tiga dengan Floating Popover)
+        }
+          // Render Riwayat Sidebar (Kunci 800ms Long-Press & Titik Tiga dengan Floating Popover)
 function renderHistory() {
   const list = document.getElementById('chat-history');
   list.innerHTML = '';
@@ -399,7 +398,6 @@ function renderHistory() {
 
       pressTimer = setTimeout(() => {
         isLongPress = true;
-        // Getaran tepat 1 kali sebagai penanda aktif
         if (navigator.vibrate) navigator.vibrate(50);
         openFloatingDropdown(id, itemContainer, startX, startY);
       }, 800); // Terkunci tepat di 800 milidetik
@@ -409,7 +407,6 @@ function renderHistory() {
       if (!pressTimer) return;
       const curX = e.touches ? e.touches[0].clientX : e.clientX;
       const curY = e.touches ? e.touches[0].clientY : e.clientY;
-      // Batalkan segera jika jari bergeser (sedang scroll / pinch zoom)
       if (Math.abs(curX - startX) > 8 || Math.abs(curY - startY) > 8) {
         clearTimeout(pressTimer);
         pressTimer = null;
@@ -683,8 +680,8 @@ function renderImageBubble(container, imgUrl) {
   wrapper.appendChild(img);
   wrapper.appendChild(actions);
   container.appendChild(wrapper);
-                                          }
-    // Render Bubble Video Player Independen dengan Ikon Murni
+  }
+      // Render Bubble Video Player Independen dengan Ikon Murni
 function renderVideoBubble(container, videoUrl) {
   const wrapper = document.createElement('div');
   wrapper.className = 'image-bubble-container';
@@ -741,7 +738,6 @@ function appendMessage(role, content, type = 'text', fileData = null) {
   msg.className = `message ${role}`;
 
   if (role === 'user') {
-    // Foto Independen di Atas Kartu (Tanpa Menabrak Garis / Box)
     if (fileData && Array.isArray(fileData) && fileData.length > 0) {
       const gallery = document.createElement('div');
       gallery.style.cssText = 'display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 8px; flex-wrap: wrap;';
@@ -969,7 +965,6 @@ async function fetchTextChatProvider(queryText, memoryContext, attachments) {
 
   if (openRouterKey) {
     try {
-      // Susun pesan multimodal jika terdapat lampiran gambar
       let userContent = [];
       if (attachments && attachments.length > 0) {
         attachments.forEach(att => {
@@ -1003,7 +998,7 @@ async function fetchTextChatProvider(queryText, memoryContext, attachments) {
         return data.choices[0].message.content;
       }
     } catch (e) {
-      console.warn('OpenRouter multimodal gagal, beralih ke Puter gateway.');
+      console.warn('OpenRouter multimodal dialihkan ke Puter gateway.');
     }
   }
 
@@ -1039,45 +1034,49 @@ async function sendMessage() {
 
   const lower = text.toLowerCase();
 
-  // PIPELINE A: GENERATOR VIDEO KHUSUS (DIFUSI NYATA DENGAN MOTION CONTROL)
+  // PIPELINE A: GENERATOR VIDEO INDEPENDEN (PUTER AI ENGINE BERKAS RIIL)
   const isVideoRequest = /buatkan\s+video|bikinin\s+video|bikin\s+video|buat\s+video|generate\s+video|video-generation|storyboard/i.test(lower);
   if (isVideoRequest) {
-    const aiBubble = appendMessage('ai', 'Sedang memproses pipeline video difusi...');
+    const aiBubble = appendMessage('ai', 'Sedang memproses motion video...');
     try {
       let cleanPrompt = text.replace(/buatkan\s+video|bikinin\s+video|bikin\s+video|buat\s+video|generate\s+video/gi, '').trim() || 'cinematic anime sequence';
       
       let motionSetting = 'smooth dynamic cinematic motion';
-      if (/pan\s+left|geser\s+kiri/i.test(lower)) motionSetting = 'pan left camera movement, motion bucket 127';
-      else if (/pan\s+right|geser\s+kanan/i.test(lower)) motionSetting = 'pan right camera movement, motion bucket 127';
-      else if (/zoom\s+in|mendekat/i.test(lower)) motionSetting = 'slow zoom in camera tracking, motion bucket 135';
-      else if (/zoom\s+out|menjauh/i.test(lower)) motionSetting = 'slow zoom out wide camera reveal, motion bucket 130';
-      else if (/tilt\s+up|sorot\s+atas/i.test(lower)) motionSetting = 'tilt up vertical cinematic motion';
+      if (/pan\s+left|geser\s+kiri/i.test(lower)) motionSetting = 'pan left camera movement';
+      else if (/pan\s+right|geser\s+kanan/i.test(lower)) motionSetting = 'pan right camera movement';
+      else if (/zoom\s+in|mendekat/i.test(lower)) motionSetting = 'slow zoom in camera tracking';
+      else if (/zoom\s+out|menjauh/i.test(lower)) motionSetting = 'slow zoom out wide camera reveal';
+      else if (/tilt\s+up|sorot\s+atas/i.test(lower)) motionSetting = 'tilt up vertical motion';
       else if (/orbital|putar/i.test(lower)) motionSetting = '360 orbit camera rotation';
       
-      const fullVideoPrompt = `${cleanPrompt}, ${motionSetting}, 4k anime render`;
-      const seed = Math.floor(Math.random() * 1000000);
-      
-      // Menggunakan pipeline video mandiri berformat MP4 langsung
-      const videoUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(fullVideoPrompt)}?model=video&seed=${seed}&nologo=true`;
-      
-      // Validasi ketersediaan file video sebelum dipasang agar tidak muter kosong
-      const testReq = await fetch(videoUrl, { method: 'HEAD' });
-      if (!testReq.ok) {
-        throw new Error('Mesin video sedang sibuk memproses render frame.');
+      const fullVideoPrompt = `${cleanPrompt}, ${motionSetting}, high quality animation`;
+
+      if (typeof puter !== 'undefined' && puter.ai) {
+        let videoResult = null;
+        if (puter.ai.txt2video) {
+          videoResult = await puter.ai.txt2video(fullVideoPrompt);
+        } else if (puter.ai.generateVideo) {
+          videoResult = await puter.ai.generateVideo(fullVideoPrompt);
+        }
+        
+        const videoSrc = (videoResult && (videoResult.src || videoResult.url)) ? (videoResult.src || videoResult.url) : videoResult;
+        if (videoSrc) {
+          aiBubble.parentElement.remove();
+          appendMessage('ai', videoSrc, 'video');
+          chats[currentChatId].messages.push({ role: 'ai', content: videoSrc, type: 'video' });
+          localStorage.setItem('my_ai_chats', JSON.stringify(chats));
+          return;
+        }
       }
 
-      aiBubble.parentElement.remove();
-      appendMessage('ai', videoUrl, 'video');
-      chats[currentChatId].messages.push({ role: 'ai', content: videoUrl, type: 'video' });
-      localStorage.setItem('my_ai_chats', JSON.stringify(chats));
-      return;
+      throw new Error('Engine video sedang menyiapkan antrean frame.');
     } catch (err) {
-      aiBubble.innerText = 'Render video difusi membutuhkan waktu antrean server: ' + err.message;
+      aiBubble.innerText = 'Render video difusi: ' + err.message;
       return;
     }
   }
 
-  // PIPELINE B: GENERATOR GAMBAR (KONSISTENSI VISUAL KARAKTER)
+  // PIPELINE B: GENERATOR GAMBAR (PUTER AI KONSISTENSI VISUAL)
   const isImageTrigger = /(gambar|lukis|foto|ilustrasi|draw|illustration|anime girl|chibi)/i.test(lower);
   const isImageModification = lastImageContext && /(ubah|ganti|tambahkan|pakaikan|jadikan|kasih)\s+(outfit|baju|pakaian|jaket|warna|latar|background|gaya)/i.test(lower);
   const isImageRequest = currentMode === 'image' || isImageTrigger || isImageModification;
@@ -1112,7 +1111,7 @@ async function sendMessage() {
     }
   }
 
-  // PIPELINE C: CHAT TEKS & ANALISA MULTIMODAL VISION OPENROUTER
+  // PIPELINE C: CHAT TEKS & MULTIMODAL VISION OPENROUTER
   const aiBubble = appendMessage('ai', 'Sedang berpikir...');
   try {
     let memoryContext = '';
@@ -1152,4 +1151,4 @@ if (window.innerWidth <= 768) {
 }
 renderWelcomeScreen();
 renderHistory();
-  
+                                
