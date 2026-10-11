@@ -359,8 +359,8 @@ function openFloatingDropdown(chatId, anchorEl, clientX, clientY) {
     closeFloatingDropdown();
     executeDeleteChat(chatId);
   };
-                                                       }
-          // Render Riwayat Sidebar (Kunci 800ms Long-Press & Titik Tiga dengan Floating Popover)
+}
+  // Render Riwayat Sidebar (Kunci 800ms Long-Press & Titik Tiga dengan Floating Popover)
 function renderHistory() {
   const list = document.getElementById('chat-history');
   list.innerHTML = '';
@@ -684,8 +684,8 @@ function renderImageBubble(container, imgUrl) {
   wrapper.appendChild(img);
   wrapper.appendChild(actions);
   container.appendChild(wrapper);
-      }
-    // Render Bubble Video Player Independen dengan Ikon Murni
+        }
+               // Render Bubble Video Player Independen dengan Ikon Murni
 function renderVideoBubble(container, videoUrl) {
   const wrapper = document.createElement('div');
   wrapper.className = 'image-bubble-container';
@@ -1054,7 +1054,7 @@ async function fetchTextChatProvider(queryText, memoryContext, attachments) {
           model: 'google/gemini-2.0-flash-exp:free',
           messages: [
             { role: 'system', content: systemInstruction },
-            { role: 'user', userContent }
+            { role: 'user', content: userContent }
           ]
         })
       });
@@ -1100,10 +1100,10 @@ async function sendMessage() {
 
   const lower = text.toLowerCase();
 
-  // PIPELINE A: GENERATOR VIDEO INDEPENDEN
+  // PIPELINE A: GENERATOR VIDEO INDEPENDEN (PRIORITAS GOOGLE API -> FALLBACK DIFUSI)
   const isVideoRequest = /buatkan\s+video|bikinin\s+video|bikin\s+video|buat\s+video|generate\s+video|video-generation|storyboard/i.test(lower);
   if (isVideoRequest) {
-    const aiBubble = appendMessage('ai', 'Sedang memproses motion video...');
+    const aiBubble = appendMessage('ai', 'Sedang memproses antrean render video...');
     try {
       let cleanPrompt = text.replace(/buatkan\s+video|bikinin\s+video|bikin\s+video|buat\s+video|generate\s+video/gi, '').trim() || 'cinematic anime sequence';
       
@@ -1115,8 +1115,57 @@ async function sendMessage() {
       else if (/tilt\s+up|sorot\s+atas/i.test(lower)) motionSetting = 'tilt up vertical motion';
       else if (/orbital|putar/i.test(lower)) motionSetting = '360 orbit camera rotation';
       
-      const fullVideoPrompt = `${cleanPrompt}, ${motionSetting}, high quality animation`;
+      const fullVideoPrompt = `${cleanPrompt}, ${motionSetting}, 4k resolution anime render`;
 
+      // 1. Eksekusi Video via Google Gemini Video API (Veo)
+      const gemKey = getGeminiKey();
+      if (gemKey) {
+        try {
+          const veoUrl = `https://generativelanguage.googleapis.com/v1beta/models/veo-2.0-generate-video:predictLongRunning?key=${gemKey}`;
+          const initRes = await fetch(veoUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              instances: [{ prompt: fullVideoPrompt }],
+              parameters: { sampleCount: 1, aspectRatio: '16:9' }
+            })
+          });
+
+          const initData = await initRes.json();
+          if (initData.name) {
+            // Polling status operasi rendering video
+            const opName = initData.name;
+            let videoCompleted = false;
+            let attempts = 0;
+            while (!videoCompleted && attempts < 20) {
+              await new Promise(r => setTimeout(r, 4000));
+              attempts++;
+              const checkUrl = `https://generativelanguage.googleapis.com/v1beta/${opName}?key=${gemKey}`;
+              const checkRes = await fetch(checkUrl);
+              const checkData = await checkRes.json();
+
+              if (checkData.done) {
+                videoCompleted = true;
+                const videoUri = checkData.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.uri;
+                const videoBytes = checkData.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.bytesBase64Encoded;
+                const finalVideoSrc = videoUri || (videoBytes ? `data:video/mp4;base64,${videoBytes}` : null);
+
+                if (finalVideoSrc) {
+                  aiBubble.parentElement.remove();
+                  appendMessage('ai', finalVideoSrc, 'video');
+                  chats[currentChatId].messages.push({ role: 'ai', content: finalVideoSrc, type: 'video' });
+                  localStorage.setItem('my_ai_chats', JSON.stringify(chats));
+                  return;
+                }
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('Google Video Engine dialihkan ke rute engine cadangan.');
+        }
+      }
+
+      // 2. Fallback Mesin Video Biner
       if (typeof puter !== 'undefined' && puter.ai) {
         let videoResult = null;
         if (puter.ai.txt2video) {
@@ -1135,7 +1184,7 @@ async function sendMessage() {
         }
       }
 
-      throw new Error('Engine video sedang menyiapkan antrean frame.');
+      throw new Error('Server video sedang memproses antrean render.');
     } catch (err) {
       aiBubble.innerText = 'Render video difusi: ' + err.message;
       return;
