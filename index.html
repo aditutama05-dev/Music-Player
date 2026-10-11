@@ -65,18 +65,12 @@
 
       <!-- Kotak Input Bar Ala Gemini -->
       <div class="input-container-wrapper">
-        <!-- Area Pratinjau Thumbnail Lampiran Gambar / File -->
-        <div id="attachment-preview-bar" style="display: none;">
-          <div class="preview-item">
-            <img id="preview-image-thumb" src="" alt="Lampiran" style="display: none;">
-            <span id="preview-filename">file.png</span>
-            <button class="btn-remove-attachment" onclick="removeAttachment()">✕</button>
-          </div>
-        </div>
+        <!-- Area Pratinjau Thumbnail Multi-Lampiran Tanpa Nama File -->
+        <div id="attachment-preview-bar" style="display: none;"></div>
 
         <div class="input-bar">
-          <!-- Input File Tersembunyi -->
-          <input type="file" id="file-uploader" style="display: none;" accept="image/*,.txt,.pdf,.js,.json" onchange="handleFileSelected(event)">
+          <!-- Input File Tersembunyi (Mendukung Multi-Upload) -->
+          <input type="file" id="file-uploader" style="display: none;" multiple accept="image/*,.txt,.pdf,.js,.json" onchange="handleFileSelected(event)">
           <button class="btn-add" onclick="triggerFileUpload()" title="Unggah Foto atau Berkas">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
           </button>
@@ -136,13 +130,16 @@
     </div>
   </div>
 
-  <!-- Settings Modal (OpenRouter & GitHub Token) -->
+  <!-- Settings Modal (Google Gemini, OpenRouter & GitHub Token) -->
   <div id="settings-modal">
-    <div class="modal-content" style="max-width: 420px;">
+    <div class="modal-content" style="max-width: 420px; max-height: 90vh; overflow-y: auto;">
       <h3 style="margin-top: 0; margin-bottom: 8px;">⚙ Pengaturan Akses AI</h3>
       <p style="font-size: 12px; color: #8e918f; margin-bottom: 14px;">Semua kunci disimpan secara lokal di memori HP Anda (aman & tidak dikirim ke repositori publik).</p>
       
-      <label style="font-size: 13px; font-weight: 600; color: #a8c7fa; display: block; margin-bottom: 4px;">OpenRouter API Key (Multi-AI)</label>
+      <label style="font-size: 13px; font-weight: 600; color: #a8c7fa; display: block; margin-bottom: 4px;">Google Gemini API Key (Utama & Imagen)</label>
+      <input type="password" id="gemini-token-input" placeholder="AIzaSy-xxxx..." style="margin-bottom: 12px; width: 100%; box-sizing: border-box;">
+
+      <label style="font-size: 13px; font-weight: 600; color: #a8c7fa; display: block; margin-bottom: 4px;">OpenRouter API Key (Multi-AI Fallback)</label>
       <input type="password" id="openrouter-token-input" placeholder="sk-or-v1-xxxx..." style="margin-bottom: 12px; width: 100%; box-sizing: border-box;">
 
       <label style="font-size: 13px; font-weight: 600; color: #a8c7fa; display: block; margin-bottom: 4px;">GitHub PAT (Codex Agent)</label>
@@ -155,7 +152,7 @@
     </div>
   </div>
 
-  <!-- Bottom Sheet Opsi Riwayat Percakapan (Ala Gemini) -->
+  <!-- Bottom Sheet Opsi Riwayat Percakapan (Cadangan) -->
   <div id="chat-options-sheet" class="bottom-sheet-backdrop" style="display: none;" onclick="closeChatOptions()">
     <div class="bottom-sheet-content" onclick="event.stopPropagation()">
       <div class="sheet-drag-handle"></div>
@@ -191,4 +188,5 @@
   <script src="github.js"></script>
   <script src="app.js"></script>
 </body>
-</html>
+  </html>
+  
