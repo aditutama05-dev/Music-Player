@@ -1,4 +1,4 @@
-const CACHE_NAME = 'personal-ai-v14';
+const CACHE_NAME = 'personal-ai-v15';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -47,7 +47,8 @@ self.addEventListener('fetch', (event) => {
   if (
     event.request.url.includes('api.github.com') ||
     event.request.url.includes('puter.com') ||
-    event.request.url.includes('openrouter.ai')
+    event.request.url.includes('openrouter.ai') ||
+    event.request.url.includes('generativelanguage.googleapis.com')
   ) {
     return;
   }
@@ -68,4 +69,3 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
-      
